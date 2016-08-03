@@ -1,4 +1,4 @@
-app.nav.imgpreload = function()function(b, f) {
+app.nav.imgpreload = function(b, f) {
 	var d = 0,
 		c = [];
 	b = "[object Array]" === Object.prototype.toString.apply(b) ? b : [b];

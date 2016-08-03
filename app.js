@@ -8,7 +8,26 @@ var express = require('express'),
     path = require('path'),
 	spawn = require('child_process').spawn,
 	HomeSlide = 'home';
-
+function createRoute(obj) {
+    var file, html;
+    app.use(obj.url, express.static(obj.webRoot));
+    if (obj.file) {
+        app.get(obj.url, function(req, res) {
+            file = fs.readFileSync(obj.file, 'utf-8');
+            if (obj.ejs) {
+                ejs.renderFile(obj.file, obj.locals, function(err, result) {
+                    if (!err) {
+                        // res.end(result);
+                        html = result;
+                    } else {
+                        html = err.toString();
+                    }
+                });
+            } else html = file;
+            res.send(html);
+        });
+    }
+}
 function dirExists(dir){
 	var stats;
 	try {
@@ -19,36 +38,46 @@ function dirExists(dir){
 		return false;
 	}
 }
-
+function getDirectories(srcpath) {
+	return fs.readdirSync(srcpath).filter(function(val) {
+		return fs.statSync(srcpath + '/' + val).isDirectory();
+	});
+}
 if(dirExists('dev/slides')){
 	app.set('view engine', 'ejs');
 	app.set('views','./dev');
-	function getDirectories(srcpath) {
-	    return fs.readdirSync(srcpath).filter(function(val) {
-	        return fs.statSync(srcpath + '/' + val).isDirectory();
-	    });
-	}
+
 	var slides = getDirectories('dev/slides');
-	app.use(express.static(__dirname + '/dev/slides'));
 	slides.forEach(function(i){
 	    app.use('/'+i, express.static(__dirname + '/dev/slides/'+i));
 	});
 	ejs.delimiter = '%';
-	app.get('/', function(req, res) {
-	    res.render('slides/index', {
-	        pages: slides,
-			Built: false
-	    });
+
+	createRoute({
+	    url: '/',
+	    webRoot: './',
+	    file: './redirect.ejs',
+	    ejs: true,
+	    locals: {
+	        home: 'slides/'+HomeSlide
+	    }
 	});
+	createRoute({
+	    url: '/globalAssets',
+	    webRoot: './dev/globalAssets',
+	    ejs: false
+	});
+
 	slides.forEach(function(e) {
-	    app.get('/' + e, function(req, res) {
-	        res.render('slides/' + e + '/' + e);
-	    });
+		createRoute({
+		    url: '/slides/'+e,
+		    webRoot: './dev/slides/'+e,
+		    file: './dev/slides/'+e+'/index.ejs',
+		    ejs: true
+		});
 	});
-	// spins up server for source code
 	app.listen(SourcePort, function() {
 	    console.log('Source code running on http://localhost:' + SourcePort);
-		// spawn('open', ['http://localhost:'+SourcePort]);
 	});
 }
 else{

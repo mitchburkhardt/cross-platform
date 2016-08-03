@@ -32,6 +32,7 @@ modGrunt.var.taskBuilders.watchSass = function() {
             var name = that.split('/')[that.split('/').length - 1];
             return name.substr(0, 1) !== '_'; // filter function to exclude files starting with "_"
         });
+		console.log(sassFiles);
         var configObj = {};
         for (i = 0; i < sassFiles.length; i++) {
             configObj[sassFiles[i].replace('.scss', '.css')] = sassFiles[i];
@@ -48,7 +49,6 @@ modGrunt.var.taskBuilders.watchSass = function() {
     CompileSASS();
 
     function watchChanges() {
-        console.log('foo');
         modGrunt.var.taskDefs.watch = {
             css: {
                 files: ['**/*.scss'],

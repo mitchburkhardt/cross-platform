@@ -1,10 +1,5 @@
-@mixin fillParent() {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-}
+
+@import './vars';
 body{
 	background-color: #000;
 }
@@ -14,4 +9,11 @@ body{
 	overflow: hidden;
 	position: relative;
 	background-color: #fff;
+	.view{
+		@include fillParent();
+		display: none;
+		&.active{
+			display: block;
+		}
+	}
 }
