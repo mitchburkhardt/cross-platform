@@ -24,9 +24,15 @@ for (i = 0; i < buildTypes.length; i++) {
     }
 }
 if (willBuild.indexOf('all') > -1 || !willBuild.length) willBuild.push('native', 'veeva', 'mi');
+var flags = {
+	delete: false
+};
+var prop;
+for (prop in flags) {
+	if(process.argv.indexOf('-'+prop) > -1) flags[prop] = true;
+}
 modGrunt.var.taskBuilders.build = function() {
     var prop;
-
     function defineModules() {
         modGrunt.var.taskDefs.shell = {
             options: {
@@ -42,6 +48,15 @@ modGrunt.var.taskBuilders.build = function() {
         modGrunt.var.taskDefs.jsbeautifier = {};
     }
     defineModules();
+
+	function deleteOld() {
+		modGrunt.var.taskDefs.clean.buffer = [compiledFolder];
+		modGrunt.var.taskArr.push('clean:buffer');
+	}
+	if(flags.delete) deleteOld();
+
+
+
 
     function showMSG() {
         modGrunt.var.taskDefs.shell.showMSG = {
@@ -189,7 +204,6 @@ modGrunt.var.taskBuilders.build = function() {
             for (j = 0; j < willBuild.length; j++) {
 				if(willBuild[j] === 'native'){
 					if(!i){
-						console.log('foo');
 						modGrunt.var.taskDefs.copy['shared-' + i + '-' + j] = {
 		                    files: [{
 		                        cwd: devFolder + '/globalAssets',
@@ -217,6 +231,27 @@ modGrunt.var.taskBuilders.build = function() {
         }
     }
     CopyShared();
+	function setPlatform(){
+		for (i=0; i<willBuild.length; i++) {
+			// console.log(willBuild[i]);
+			 modGrunt.var.taskDefs['string-replace']['setPlatform-'+willBuild[i]] = {
+	             files: [{
+	                 expand: true,
+	                 cwd: compiledFolder + '/' + willBuild[i]+' - '+timeStamp,
+	                 src: ['**/*.html'],
+	                 dest: compiledFolder + '/' + willBuild[i]+' - '+timeStamp
+	             }],
+	             options: {
+	                 replacements: [{
+	                     pattern: 'desktop.js',
+	                     replacement: willBuild[i]+'.js'
+	                 }]
+	             }
+	         };
+	         modGrunt.var.taskArr.push('string-replace:setPlatform-'+willBuild[i]);
+		}
+	}
+	setPlatform();
     function PrettifyHTML() {
         modGrunt.var.taskDefs.jsbeautifier.BuiltFiles = {
             src: [compiledFolder + '/**/*.html'],

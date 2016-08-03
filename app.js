@@ -35,7 +35,7 @@ if(dirExists('dev/slides')){
 	});
 	ejs.delimiter = '%';
 	app.get('/', function(req, res) {
-	    res.render(`slides/${HomeSlide}/${HomeSlide}`, {
+	    res.render(`slides/${HomeSlide}/index`, {
 	        pages: slides,
 			Built: false
 	    });
