@@ -17,7 +17,6 @@ function createRoute(obj) {
             if (obj.ejs) {
                 ejs.renderFile(obj.file, obj.locals, function(err, result) {
                     if (!err) {
-                        // res.end(result);
                         html = result;
                     } else {
                         html = err.toString();
@@ -69,11 +68,16 @@ if(dirExists('dev/slides')){
 	});
 
 	slides.forEach(function(e) {
+		var fullPage = false;
+		if(e === HomeSlide) fullPage = true;
 		createRoute({
 		    url: '/slides/'+e,
 		    webRoot: './dev/slides/'+e,
 		    file: './dev/slides/'+e+'/index.ejs',
-		    ejs: true
+		    ejs: true,
+			locals:{
+				fullPage: fullPage
+			}
 		});
 	});
 	app.listen(SourcePort, function() {

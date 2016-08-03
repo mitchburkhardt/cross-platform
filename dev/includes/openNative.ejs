@@ -1,7 +1,13 @@
-<!DOCTYPE>
-<html>
-<head>
-    <meta name="viewport" content="width=1024, initial-scale=1, user-scalable=no">
-    <link rel="stylesheet" href="./complete.css">
-</head>
-<body>
+<%
+	var html = '';
+	if(fullPage) html = `
+	<!DOCTYPE>
+	<html>
+	<head>
+	    <meta name="viewport" content="width=1024, initial-scale=1, user-scalable=no">
+	    <link rel="stylesheet" href="./complete.css">
+	</head>
+	<body>
+	`;
+%>
+<%- html %>

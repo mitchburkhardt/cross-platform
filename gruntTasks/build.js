@@ -1,4 +1,5 @@
 if (!modGrunt.var.taskDefs) modGrunt.var.taskDefs = {};
+var HomeSlide = 'home';
 var devFolder = './dev';
 var compiledFolder = './releases';
 var buildTypes = ['-all', '-native', '-veeva', '-mi'];
@@ -46,6 +47,7 @@ modGrunt.var.taskBuilders.build = function() {
         modGrunt.var.taskDefs['string-replace'] = {};
         modGrunt.var.taskDefs.sass = {};
         modGrunt.var.taskDefs.jsbeautifier = {};
+
     }
     defineModules();
 
@@ -101,52 +103,39 @@ modGrunt.var.taskBuilders.build = function() {
     CopySource();
 
     function CompileEJS() {
-        for (i = 0; i < slides.length; i++) {
-            modGrunt.var.taskDefs.ejs[i + 1] = {
-                cwd: modGrunt.var.devFolder,
-                src: ['slides/' + slides[i] + '/index.ejs'],
-                dest: compiledFolder.replace('./', '') + '/ejs',
-                expand: true,
-                ext: '.html',
-                options: {
-                    pages: slides,
-                    Built: true
-                }
-            };
-            modGrunt.var.taskArr.push('ejs:' + (i + 1));
-        }
-        for (i = 0; i < willBuild.length; i++) {
-            modGrunt.var.taskDefs.copy['ejs' + '-' + willBuild[i]] = {
-                files: [{
-                    cwd: compiledFolder + '/ejs/slides',
-                    src: '**/*',
-                    dest: compiledFolder + '/' + willBuild[i]+' - '+timeStamp,
-                    expand: true
-                }]
-            };
-            modGrunt.var.taskArr.push('copy:ejs' + '-' + willBuild[i]);
-        }
-        var arr = [compiledFolder + '/ejs'];
 
-        function addToArr(extension, callback) {
-            var srcArr = utils.findFileType(devFolder, extension, function() {
-                return true;
-            });
-            for (i = 0; i < srcArr.length; i++) {
-                for (j = 0; j < willBuild.length; j++) {
-                    arr.push(compiledFolder + '/' + willBuild[j]+' - '+timeStamp + srcArr[i].split('/slides')[1]);
-                    if (i === srcArr.length - 1 && j === willBuild.length - 1) callback();
-                }
-            }
-        }
-        addToArr('ejs', function() {
-            addToArr('scss', function() {
-                addToArr('map', function() {
-                    modGrunt.var.taskDefs.clean.ejs = arr;
-                    modGrunt.var.taskArr.push('clean:ejs');
-                });
-            });
-        });
+		var srcArr = utils.findFileType(devFolder+'/slides', 'ejs', function() {
+			return true;
+		});
+		function BuildTask(config){
+			modGrunt.var.taskDefs.ejs[config.id1+'-'+config.id2] = {
+				cwd: config.cwd,
+				src: config.src,
+				dest: config.dest,
+				expand: true,
+				ext: '.html',
+				options: {
+					fullPage: config.fullPage
+				}
+			};
+			modGrunt.var.taskArr.push('ejs:'+config.id1+'-'+config.id2);
+		}
+		var rel = devFolder+'/slides';
+		var makeFull;
+		for (i=0; i<srcArr.length; i++) {
+			for (j=0; j<willBuild.length; j++) {
+				makeFull = true;
+				if(willBuild[j] === 'native' && srcArr[i].split('/')[3] !== HomeSlide) makeFull = false;
+				BuildTask({
+					id1: i,
+					id2: j,
+					cwd: rel,
+					src: srcArr[i].replace(rel+'/', ''),
+					dest: compiledFolder.replace('./', '') + '/' + willBuild[j] +' - '+timeStamp,
+					fullPage: makeFull
+				});
+			}
+		}
     }
     CompileEJS();
 
@@ -233,7 +222,6 @@ modGrunt.var.taskBuilders.build = function() {
     CopyShared();
 	function setPlatform(){
 		for (i=0; i<willBuild.length; i++) {
-			// console.log(willBuild[i]);
 			 modGrunt.var.taskDefs['string-replace']['setPlatform-'+willBuild[i]] = {
 	             files: [{
 	                 expand: true,
@@ -295,10 +283,15 @@ modGrunt.var.taskBuilders.build = function() {
             };
             modGrunt.var.taskArr.push('copy:renameVeeva-' + i);
         }
-        modGrunt.var.taskDefs.clean.renameVeeva = [arr];
-        modGrunt.var.taskArr.push('clean:renameVeeva');
+        modGrunt.var.taskDefs.clean.renameVeevaIndexes = [arr];
+		modGrunt.var.taskArr.push('clean:renameVeevaIndexes');
     }
     if (willBuild.indexOf('veeva') > -1) {
         renameVeevaIndexes();
     }
+	function removeSourceCode(){
+		modGrunt.var.taskDefs.clean.sourceCode = [compiledFolder+'/**/*.ejs', compiledFolder+'/**/*.scss', compiledFolder+'/**/*.map'];
+        modGrunt.var.taskArr.push('clean:sourceCode');
+	}
+	removeSourceCode();
 };
