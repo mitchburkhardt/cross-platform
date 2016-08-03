@@ -1,0 +1,17 @@
+@mixin fillParent() {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+body{
+	background-color: #000;
+}
+#container{
+	width: 2048px;
+	height: 1536px;
+	overflow: hidden;
+	position: relative;
+	background-color: #fff;
+}

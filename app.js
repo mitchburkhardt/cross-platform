@@ -29,13 +29,13 @@ if(dirExists('dev/slides')){
 	    });
 	}
 	var slides = getDirectories('dev/slides');
-	app.use(express.static(__dirname + '/dev/'));
+	app.use(express.static(__dirname + '/dev/slides'));
 	slides.forEach(function(i){
 	    app.use('/'+i, express.static(__dirname + '/dev/slides/'+i));
 	});
 	ejs.delimiter = '%';
 	app.get('/', function(req, res) {
-	    res.render(`slides/${HomeSlide}/index`, {
+	    res.render('slides/index', {
 	        pages: slides,
 			Built: false
 	    });
