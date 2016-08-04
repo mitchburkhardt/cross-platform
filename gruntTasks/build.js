@@ -125,7 +125,7 @@ modGrunt.var.taskBuilders.build = function() {
 		for (i=0; i<srcArr.length; i++) {
 			for (j=0; j<willBuild.length; j++) {
 				makeFull = true;
-				if(willBuild[j] === 'native' && srcArr[i].split('/')[3] !== HomeSlide) makeFull = false;
+				if(willBuild[j] === 'native') makeFull = false;
 				BuildTask({
 					id1: i,
 					id2: j,
@@ -135,6 +135,27 @@ modGrunt.var.taskBuilders.build = function() {
 					fullPage: makeFull
 				});
 			}
+		}
+		if(willBuild.indexOf('native') > -1){
+			BuildTask({
+				id1: 'native',
+				id2: 'wrapper',
+				cwd: rel,
+				src: `${HomeSlide}/index.ejs`.replace(rel+'/', ''),
+				dest: compiledFolder.replace('./', '') + '/native' +' - '+timeStamp+'/wrapper',
+				fullPage: makeFull
+			});
+			modGrunt.var.taskDefs.copy.nativeWrapper = {
+                files: [{
+                    cwd: './',
+                    src: compiledFolder.replace('./', '') + '/native' +' - '+timeStamp+`/wrapper/${HomeSlide}/index.html`,
+                    dest: compiledFolder.replace('./', '') + '/native' +' - '+timeStamp+'/index.html',
+                    expand: false
+                }]
+            };
+			modGrunt.var.taskArr.push('copy:nativeWrapper');
+			modGrunt.var.taskDefs.clean.removeWrapper = [compiledFolder.replace('./', '') + '/native' +' - '+timeStamp+'/wrapper/'];
+			modGrunt.var.taskArr.push('clean:removeWrapper');
 		}
     }
     CompileEJS();
@@ -269,25 +290,54 @@ modGrunt.var.taskBuilders.build = function() {
     }
     PrettifyHTML();
 
-	function renameVeevaIndexes() {
+	function renameVeevaFiles() {
         var arr = [];
+		var path;
+		var slideName;
         for (i = 0; i < slides.length; i++) {
-            arr.push(compiledFolder + '/veeva'+' - '+timeStamp +'/' + slides[i] + '/index.html');
-            modGrunt.var.taskDefs.copy['renameVeeva-' + i] = {
+			path = compiledFolder + '/veeva'+' - '+timeStamp +'/' + slides[i] + '/';
+			slideName = path.split('/');
+			slideName = slideName[slideName.length-2];
+
+            modGrunt.var.taskDefs.copy['renameVeevaIndex' + i] = {
                 files: [{
                     cwd: './',
-                    src: compiledFolder + '/veeva'+' - '+timeStamp +'/' + slides[i] + '/index.html',
-                    dest: compiledFolder + '/veeva'+' - '+timeStamp + '/' + slides[i] + '/' + slides[i] + '.html',
+                    src: path+'index.html',
+                    dest: path + slides[i] + '.html',
                     expand: false
                 }]
             };
-            modGrunt.var.taskArr.push('copy:renameVeeva-' + i);
+			arr.push(path+'index.html');
+			modGrunt.var.taskArr.push('copy:renameVeevaIndex' + i);
+			//
+			modGrunt.var.taskDefs.copy['renameVeevaJPEG1-' + i] = {
+                files: [{
+                    cwd: './',
+                    src: path+'full.jpg',
+                    dest:path+slideName+'-full.jpg',
+                    expand: false
+                }]
+            };
+			arr.push(path+'thumb.jpg');
+			modGrunt.var.taskArr.push('copy:renameVeevaJPEG1-' + i);
+			//
+			modGrunt.var.taskDefs.copy['renameVeevaJPEG2-' + i] = {
+                files: [{
+                    cwd: './',
+                    src: path+'thumb.jpg',
+                    dest:path+slideName+'-thumb.jpg',
+                    expand: false
+                }]
+            };
+			arr.push(path+'full.jpg');
+			modGrunt.var.taskArr.push('copy:renameVeevaJPEG2-' + i);
+
         }
-        modGrunt.var.taskDefs.clean.renameVeevaIndexes = [arr];
-		modGrunt.var.taskArr.push('clean:renameVeevaIndexes');
+        modGrunt.var.taskDefs.clean.VeevaTrash = [arr];
+		modGrunt.var.taskArr.push('clean:VeevaTrash');
     }
     if (willBuild.indexOf('veeva') > -1) {
-        renameVeevaIndexes();
+        renameVeevaFiles();
     }
 	function removeSourceCode(){
 		modGrunt.var.taskDefs.clean.sourceCode = [compiledFolder+'/**/*.ejs', compiledFolder+'/**/*.scss', compiledFolder+'/**/*.map'];
