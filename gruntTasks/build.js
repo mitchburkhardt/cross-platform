@@ -32,6 +32,28 @@ var prop;
 for (prop in flags) {
 	if(process.argv.indexOf('-'+prop) > -1) flags[prop] = true;
 }
+var mrCounter = 0;
+function move_rename(config){
+	console.log('sdfgsdfhgsdfh');
+	mrCounter++;
+	// src: compiledFolder.replace('./', '') + '/native' +' - '+timeStamp+'/index.html',
+	// dest: compiledFolder.replace('./', '') + '/native' +' - '+timeStamp+'/index.html',
+	// delete: compiledFolder.replace('./', '') + '/native' +' - '+timeStamp+'/wrapper/'
+	modGrunt.var.taskDefs.copy['move_rename-'+mrCounter] = {
+		files: [{
+			cwd: './',
+			src: config.src,
+			dest: config.dest,
+			expand: false
+		}]
+	};
+	console.log(modGrunt.var.taskDefs.copy['move_rename-'+mrCounter]);
+	modGrunt.var.taskArr.push('copy:move_rename-'+mrCounter);
+	modGrunt.var.taskDefs.clean['move_rename-'+mrCounter] = [config.delete];
+	modGrunt.var.taskArr.push('clean:move_rename-'+mrCounter);
+}
+
+
 modGrunt.var.taskBuilders.build = function() {
     var prop;
     function defineModules() {
@@ -145,17 +167,11 @@ modGrunt.var.taskBuilders.build = function() {
 				dest: compiledFolder.replace('./', '') + '/native' +' - '+timeStamp+'/wrapper',
 				fullPage: makeFull
 			});
-			modGrunt.var.taskDefs.copy.nativeWrapper = {
-                files: [{
-                    cwd: './',
-                    src: compiledFolder.replace('./', '') + '/native' +' - '+timeStamp+`/wrapper/${HomeSlide}/index.html`,
-                    dest: compiledFolder.replace('./', '') + '/native' +' - '+timeStamp+'/index.html',
-                    expand: false
-                }]
-            };
-			modGrunt.var.taskArr.push('copy:nativeWrapper');
-			modGrunt.var.taskDefs.clean.removeWrapper = [compiledFolder.replace('./', '') + '/native' +' - '+timeStamp+'/wrapper/'];
-			modGrunt.var.taskArr.push('clean:removeWrapper');
+			move_rename({
+				src: compiledFolder.replace('./', '') + '/native' +' - '+timeStamp+`/wrapper/${HomeSlide}/index.html`,
+				dest: compiledFolder.replace('./', '') + '/native' +' - '+timeStamp+'/index.html',
+				delete: compiledFolder.replace('./', '') + '/native' +' - '+timeStamp+'/wrapper/'
+			});
 		}
     }
     CompileEJS();
@@ -298,43 +314,22 @@ modGrunt.var.taskBuilders.build = function() {
 			path = compiledFolder + '/veeva'+' - '+timeStamp +'/' + slides[i] + '/';
 			slideName = path.split('/');
 			slideName = slideName[slideName.length-2];
-
-            modGrunt.var.taskDefs.copy['renameVeevaIndex' + i] = {
-                files: [{
-                    cwd: './',
-                    src: path+'index.html',
-                    dest: path + slides[i] + '.html',
-                    expand: false
-                }]
-            };
-			arr.push(path+'index.html');
-			modGrunt.var.taskArr.push('copy:renameVeevaIndex' + i);
-			//
-			modGrunt.var.taskDefs.copy['renameVeevaJPEG1-' + i] = {
-                files: [{
-                    cwd: './',
-                    src: path+'full.jpg',
-                    dest:path+slideName+'-full.jpg',
-                    expand: false
-                }]
-            };
-			arr.push(path+'thumb.jpg');
-			modGrunt.var.taskArr.push('copy:renameVeevaJPEG1-' + i);
-			//
-			modGrunt.var.taskDefs.copy['renameVeevaJPEG2-' + i] = {
-                files: [{
-                    cwd: './',
-                    src: path+'thumb.jpg',
-                    dest:path+slideName+'-thumb.jpg',
-                    expand: false
-                }]
-            };
-			arr.push(path+'full.jpg');
-			modGrunt.var.taskArr.push('copy:renameVeevaJPEG2-' + i);
-
-        }
-        modGrunt.var.taskDefs.clean.VeevaTrash = [arr];
-		modGrunt.var.taskArr.push('clean:VeevaTrash');
+			move_rename({
+				src: path+'index.html',
+				dest: path + slides[i] + '.html',
+				delete: path+'index.html'
+			});
+			move_rename({
+				src:path+'full.jpg',
+				dest: path+slideName+'-full.jpg',
+				delete: path+'full.jpg'
+			});
+			move_rename({
+				src:path+'thumb.jpg',
+				dest: path+slideName+'-thumb.jpg',
+				delete: path+'thumb.jpg'
+			});
+		}
     }
     if (willBuild.indexOf('veeva') > -1) {
         renameVeevaFiles();
