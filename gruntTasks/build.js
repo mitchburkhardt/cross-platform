@@ -34,11 +34,7 @@ for (prop in flags) {
 }
 var mrCounter = 0;
 function move_rename(config){
-	console.log('sdfgsdfhgsdfh');
 	mrCounter++;
-	// src: compiledFolder.replace('./', '') + '/native' +' - '+timeStamp+'/index.html',
-	// dest: compiledFolder.replace('./', '') + '/native' +' - '+timeStamp+'/index.html',
-	// delete: compiledFolder.replace('./', '') + '/native' +' - '+timeStamp+'/wrapper/'
 	modGrunt.var.taskDefs.copy['move_rename-'+mrCounter] = {
 		files: [{
 			cwd: './',
@@ -47,7 +43,6 @@ function move_rename(config){
 			expand: false
 		}]
 	};
-	console.log(modGrunt.var.taskDefs.copy['move_rename-'+mrCounter]);
 	modGrunt.var.taskArr.push('copy:move_rename-'+mrCounter);
 	modGrunt.var.taskDefs.clean['move_rename-'+mrCounter] = [config.delete];
 	modGrunt.var.taskArr.push('clean:move_rename-'+mrCounter);
