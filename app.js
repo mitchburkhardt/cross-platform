@@ -51,7 +51,7 @@ function restart(server){
 	})();
 	console.log('restarting... - '+timeStamp);
 	server.close();
-	spinServers();
+	// spinServers();
 }
 function dirExists(dir){
 	var stats;
@@ -150,14 +150,13 @@ function spinServers(){
 }
 spinServers();
 
+
+
+
 var restarter = null;
 watch('./', function(e) {
-	if(restarter){
-		clearTimeout(restarter);
-	}
+	if(restarter) clearTimeout(restarter);
 	restarter = setTimeout(function(){
-		// console.log(e);
 		restart(devServer);
 	},550);
-
 });
