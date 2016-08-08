@@ -6,6 +6,7 @@
   },
   "private": true,
   "dependencies": {
+    "debug": "^2.2.0",
     "ejs": "2.4.1",
     "express": "4.13.4",
     "fs": "0.0.2",
@@ -25,6 +26,7 @@
     "jsonfile": "2.3.0",
     "load-grunt-tasks": "3.5.0",
     "node-static": "0.7.7",
+    "node-watch": "^0.4.0",
     "path": "0.12.7"
   }
 }

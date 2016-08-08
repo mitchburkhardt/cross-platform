@@ -7,7 +7,15 @@ var express = require('express'),
     fs = require('fs'),
     path = require('path'),
 	spawn = require('child_process').spawn,
-	HomeSlide = 'home';
+	watch = require('node-watch'),
+	watcher = false,
+	projectConfig = JSON.parse(fs.readFileSync('./dev/project.json', 'utf-8')),
+	HomeSlide = projectConfig.slides[1],
+	devServer;
+
+	console.log(HomeSlide);
+
+
 function createRoute(obj) {
     var file, html;
     app.use(obj.url, express.static(obj.webRoot));
@@ -27,6 +35,24 @@ function createRoute(obj) {
         });
     }
 }
+function restart(server){
+	var timeStamp;
+	(function(){
+		var m = 'AM';
+		var ds = new Date().toString().split(' ');
+		var tz = ds[6].replace('(','').replace(')','');
+		var ts = ds[4].split(':');
+		if(ts[0]*1 > 12){
+			m = 'PM';
+			ts[0] = ts[0] - 12;
+		}
+		ts = ts.join('.')+'-'+m;
+		timeStamp = ts+' '+tz;
+	})();
+	console.log('restarting... - '+timeStamp);
+	server.close();
+	spinServers();
+}
 function dirExists(dir){
 	var stats;
 	try {
@@ -42,71 +68,96 @@ function getDirectories(srcpath) {
 		return fs.statSync(srcpath + '/' + val).isDirectory();
 	});
 }
-if(dirExists('dev/slides')){
-	app.set('view engine', 'ejs');
-	app.set('views','./dev');
-
-	var slides = getDirectories('dev/slides');
-	slides.forEach(function(i){
-	    app.use('/'+i, express.static(__dirname + '/dev/slides/'+i));
-	});
-	ejs.delimiter = '%';
-
-	createRoute({
-	    url: '/',
-	    webRoot: './',
-	    file: './redirect.ejs',
-	    ejs: true,
-	    locals: {
-	        home: 'slides/'+HomeSlide
-	    }
-	});
-	createRoute({
-	    url: '/globalAssets',
-	    webRoot: './dev/globalAssets',
-	    ejs: false
-	});
-
-	slides.forEach(function(e) {
-		var fullPage = false;
-		if(e === HomeSlide) fullPage = true;
-		createRoute({
-		    url: '/slides/'+e,
-		    webRoot: './dev/slides/'+e,
-		    file: './dev/slides/'+e+'/index.ejs',
-		    ejs: true,
-			locals:{
-				fullPage: fullPage
-			}
+function spinServers(){
+	if(dirExists('dev/slides')){
+		app.set('view engine', 'ejs');
+		app.set('views','./dev');
+		var slides = getDirectories('dev/slides');
+		slides.forEach(function(i){
+		    app.use('/'+i, express.static(__dirname + '/dev/slides/'+i));
 		});
-	});
-	app.listen(SourcePort, function() {
-	    console.log('Source code running on http://localhost:' + SourcePort);
-	});
-}
-else{
-	console.log('source code does not exist in: ./dev');
-}
+		ejs.delimiter = '%';
+
+		createRoute({
+		    url: '/',
+		    webRoot: './dev/slides/home',
+		    file: './dev/router/foo/index.ejs',
+		    ejs: true,
+		    locals: {
+				fullPage: false,
+		        home: HomeSlide,
+				buildType: 'native',
+				firstRun: true,
+				filename: 'dev/slides/'+HomeSlide+'/index.ejs',
+		    }
+		});
+		createRoute({
+		    url: '/',
+		    webRoot: './dev/router/foo/'
+		});
+		createRoute({
+		    url: '/globalAssets',
+		    webRoot: './dev/globalAssets',
+		    ejs: false
+		});
+
+		slides.forEach(function(e) {
+			createRoute({
+			    url: '/slides/'+e,
+			    webRoot: './dev/slides/'+e,
+			    file: './dev/slides/'+e+'/index.ejs',
+			    ejs: true,
+				locals:{
+					fullPage: false,
+					home: HomeSlide,
+					buildType: 'native',
+					filename: 'dev/slides/'+e+'/index.ejs',
+					firstRun: false
+				}
+			});
+		});
 
 
-var static = require('node-static');
-var http = require('http');
+		devServer = app.listen(SourcePort, function() {
+		    console.log('Source code running on http://localhost:' + SourcePort);
+		});
 
-if(dirExists('compiled')){
-	// spins up server for Built code
-	var Builtserver = new static.Server('./compiled');
-	http.createServer(function (request, response) {
-	    request.addListener('end', function () {
-	        Builtserver.serve(request, response);
-	    }).resume();
-	}).listen(BuiltPort, function(){
-	    // console.log('Compiled code running on http://localhost:' + BuiltPort);
-		// spawn('open', ['http://localhost:'+BuiltPort]);
-	});
-}
-else{
-	// console.log('source code has not been compiled.  Run "grunt build"');
-}
 
-// var spawn = require('child_process').spawn
-// spawn('open', ['http://www.stackoverflow.com', 'http://google.com']);
+	}
+	else{
+		console.log('source code does not exist in: ./dev');
+	}
+
+
+	var static = require('node-static');
+	var http = require('http');
+
+	if(dirExists('compiled')){
+		// spins up server for Built code
+		var Builtserver = new static.Server('./compiled');
+		http.createServer(function (request, response) {
+		    request.addListener('end', function () {
+		        Builtserver.serve(request, response);
+		    }).resume();
+		}).listen(BuiltPort, function(){
+		    // console.log('Compiled code running on http://localhost:' + BuiltPort);
+			// spawn('open', ['http://localhost:'+BuiltPort]);
+		});
+	}
+	else{
+		// console.log('source code has not been compiled.  Run "grunt build"');
+	}
+}
+spinServers();
+
+var restarter = null;
+watch('./', function(e) {
+	if(restarter){
+		clearTimeout(restarter);
+	}
+	restarter = setTimeout(function(){
+		// console.log(e);
+		restart(devServer);
+	},550);
+
+});

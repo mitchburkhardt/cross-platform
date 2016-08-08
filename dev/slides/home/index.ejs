@@ -1,4 +1,17 @@
-<% include ../../includes/openNative %>
-
+<% include ../../includes/openTemplate %>
 	home page content
-<% include ../../includes/closeNative %>
+<%
+var t1 = -1;
+function wrapscript(){
+	t1 = t1*-1;
+	if(t1 > 0) return '<script type="text/javascript" charset="utf-8">';
+	else return '</script>';
+}
+%>
+
+<%- wrapscript() %>
+<% include ./page.js %>
+<%- wrapscript() %>
+
+
+<% include ../../includes/closeTemplate %>

@@ -1,5 +1,5 @@
 if (!modGrunt.var.taskDefs) modGrunt.var.taskDefs = {};
-var HomeSlide = 'home';
+
 var devFolder = './dev';
 var compiledFolder = './releases';
 var buildTypes = ['-all', '-native', '-veeva', '-mi'];
@@ -132,7 +132,9 @@ modGrunt.var.taskBuilders.build = function() {
 				expand: true,
 				ext: '.html',
 				options: {
-					fullPage: config.fullPage
+					fullPage: config.fullPage,
+					buildType: config.buildType,
+					firstRun: config.firstRun
 				}
 			};
 			modGrunt.var.taskArr.push('ejs:'+config.id1+'-'+config.id2);
@@ -149,7 +151,9 @@ modGrunt.var.taskBuilders.build = function() {
 					cwd: rel,
 					src: srcArr[i].replace(rel+'/', ''),
 					dest: compiledFolder.replace('./', '') + '/' + willBuild[j] +' - '+timeStamp,
-					fullPage: makeFull
+					fullPage: makeFull,
+					buildType: willBuild[j],
+					firstRun: false
 				});
 			}
 		}
@@ -160,7 +164,8 @@ modGrunt.var.taskBuilders.build = function() {
 				cwd: rel,
 				src: `${HomeSlide}/index.ejs`.replace(rel+'/', ''),
 				dest: compiledFolder.replace('./', '') + '/native' +' - '+timeStamp+'/wrapper',
-				fullPage: makeFull
+				fullPage: makeFull,
+				firstRun: true
 			});
 			move_rename({
 				src: compiledFolder.replace('./', '') + '/native' +' - '+timeStamp+`/wrapper/${HomeSlide}/index.html`,
