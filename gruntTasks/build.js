@@ -131,10 +131,16 @@ modGrunt.var.taskBuilders.build = function() {
                 options: {
                     fullPage: config.fullPage,
                     buildType: config.buildType,
-                    firstRun: config.firstRun
+					nativeRoot: config.nativeRoot,
+					home: config.home
                 }
             };
             modGrunt.var.taskArr.push('ejs:' + config.id1 + '-' + config.id2);
+			console.log('____________________');
+			console.log('____________________');
+			console.log(config.src, config.nativeRoot);
+			console.log('____________________');
+			console.log('____________________');
         }
         var rel = devFolder + '/slides';
         var makeFull;
@@ -153,7 +159,8 @@ modGrunt.var.taskBuilders.build = function() {
 	                    dest: compiledFolder.replace('./', '') + '/' + willBuild[j] + ' - ' + timeStamp,
 	                    fullPage: makeFull,
 	                    buildType: willBuild[j],
-	                    firstRun: false
+						nativeRoot: FrameIndex,
+						home: HomeSlide
 	                });
 				}
             }

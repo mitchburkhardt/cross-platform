@@ -12,7 +12,6 @@ var express = require('express'),
 	projectConfig = JSON.parse(fs.readFileSync('./dev/project.json', 'utf-8')),
 	HomeSlide = projectConfig.slides[1][0],
 	devServer;
-	// TODO: finish server version (native-like)
 	// TODO: scrolling ISI feature
 	// TODO: framework navigation (all 3)
 
@@ -87,18 +86,22 @@ function spinServers(){
 				fullPage: false,
 		        home: HomeSlide,
 				buildType: 'native',
-				firstRun: true,
 				filename: 'dev/slides/'+HomeSlide+'/index.ejs',
+				nativeRoot: true
 		    }
 		});
 		createRoute({
 		    url: '/',
-		    webRoot: './dev/router/foo/'
+		    webRoot: './dev/router/foo/',
+			nativeRoot: false,
+			home: HomeSlide
 		});
 		createRoute({
 		    url: '/globalAssets',
 		    webRoot: './dev/globalAssets',
-		    ejs: false
+		    ejs: false,
+			nativeRoot: false,
+			home: HomeSlide
 		});
 
 		slides.forEach(function(e) {
@@ -111,8 +114,7 @@ function spinServers(){
 					fullPage: false,
 					home: HomeSlide,
 					buildType: 'native',
-					filename: 'dev/slides/'+e+'/index.ejs',
-					firstRun: false
+					filename: 'dev/slides/'+e+'/index.ejs'
 				}
 			});
 		});
