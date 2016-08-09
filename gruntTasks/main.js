@@ -2,7 +2,7 @@ require('../AMnodeUtils.js');
 global.fs = require('fs');
 global.path = require('path');
 global.projectConfig = JSON.parse(fs.readFileSync('./dev/project.json', 'utf-8'));
-global.HomeSlide = projectConfig.slides[1];
+global.HomeSlide = projectConfig.slides[1][0];
 global.modGrunt = {
     var: {
         fs: require('fs'),

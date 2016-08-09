@@ -10,7 +10,7 @@ var express = require('express'),
 	watch = require('node-watch'),
 	watcher = false,
 	projectConfig = JSON.parse(fs.readFileSync('./dev/project.json', 'utf-8')),
-	HomeSlide = projectConfig.slides[1],
+	HomeSlide = projectConfig.slides[1][0],
 	devServer;
 
 	console.log(HomeSlide);
