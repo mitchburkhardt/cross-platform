@@ -138,38 +138,27 @@ modGrunt.var.taskBuilders.build = function() {
         }
         var rel = devFolder + '/slides';
         var makeFull;
+		var FrameIndex;
         for (i = 0; i < srcArr.length; i++) {
             for (j = 0; j < willBuild.length; j++) {
+				FrameIndex = srcArr[i] === './dev/slides/index.ejs';
                 makeFull = true;
-                if (willBuild[j] === 'native') makeFull = false;
-                BuildTask({
-                    id1: i,
-                    id2: j,
-                    cwd: rel,
-                    src: srcArr[i].replace(rel + '/', ''),
-                    dest: compiledFolder.replace('./', '') + '/' + willBuild[j] + ' - ' + timeStamp,
-                    fullPage: makeFull,
-                    buildType: willBuild[j],
-                    firstRun: false
-                });
+                if (willBuild[j] === 'native' && !FrameIndex) makeFull = false;
+				if(!FrameIndex || willBuild[j] === 'native'){
+					BuildTask({
+	                    id1: i,
+	                    id2: j,
+	                    cwd: rel,
+	                    src: srcArr[i].replace(rel + '/', ''),
+	                    dest: compiledFolder.replace('./', '') + '/' + willBuild[j] + ' - ' + timeStamp,
+	                    fullPage: makeFull,
+	                    buildType: willBuild[j],
+	                    firstRun: false
+	                });
+				}
             }
         }
-        if (willBuild.indexOf('native') > -1) {
-            BuildTask({
-                id1: 'native',
-                id2: 'wrapper',
-                cwd: rel,
-                src: `${HomeSlide}/index.ejs`.replace(rel + '/', ''),
-                dest: compiledFolder.replace('./', '') + '/native' + ' - ' + timeStamp + '/wrapper',
-                fullPage: makeFull,
-                firstRun: true
-            });
-            move_rename({
-                src: compiledFolder.replace('./', '') + '/native' + ' - ' + timeStamp + `/wrapper/${HomeSlide}/index.html`,
-                dest: compiledFolder.replace('./', '') + '/native' + ' - ' + timeStamp + '/index.html',
-                delete: compiledFolder.replace('./', '') + '/native' + ' - ' + timeStamp + '/wrapper/'
-            });
-        }
+
     }
     CompileEJS();
 

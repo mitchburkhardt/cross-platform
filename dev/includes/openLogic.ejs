@@ -1,6 +1,13 @@
 <%
-	var top = '';
-	if(locals.fullPage) top = include('../../includes/openTemplate', locals);
+	var top;
+	var style;
+	if(locals.fullPage){
+		top = include('../../includes/openTemplate', locals);
+	}
+	else{
+		style = locals.filename.split('/');
+		style = style[2];
+		top = `<link rel="stylesheet" href="./${style}/content.css" />`;
+	}
 %>
-
 <%- top %>

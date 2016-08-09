@@ -1,9 +1,2 @@
-<% locals.fullPage = true; console.log(locals);%>
+<% locals.fullPage = true;%>
 <%- include(`../../slides/${locals.home}/index`, {user: 'foo'}); %>
-
-
-
-<%
-	var foo = include(`../../slides/${locals.home}/index`, {user: 'foo'});
-	console.log(foo);
-%>

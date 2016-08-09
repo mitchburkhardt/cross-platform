@@ -1,6 +1,19 @@
 <%
 	var bottom = '';
-	if(locals.fullPage) bottom = include('../../includes/closeTemplate', locals);
+	var script;
+	if(locals.fullPage){
+		bottom = include('../../includes/closeTemplate', locals);
+	}
+	else{
+		script = include('./page.js');
+		bottom = `<script>
+			app.pageScripts['${locals.filename}'] = function(){
+				${script}
+			};
+			app.pageScripts['${locals.filename}']();
+		</script>`;
+	}
+
 %>
 
 <%- bottom %>
