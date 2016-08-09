@@ -12,9 +12,9 @@ var express = require('express'),
 	projectConfig = JSON.parse(fs.readFileSync('./dev/project.json', 'utf-8')),
 	HomeSlide = projectConfig.slides[1][0],
 	devServer;
-
-	console.log(HomeSlide);
-
+	// TODO: finish server version (native-like)
+	// TODO: scrolling ISI feature
+	// TODO: framework navigation (all 3)
 
 function createRoute(obj) {
     var file, html;
