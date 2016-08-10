@@ -32,6 +32,7 @@ modGrunt.var.taskBuilders.compileSass = function() {
             var name = that.split('/')[that.split('/').length - 1];
             return name.substr(0, 1) !== '_'; // filter function to exclude files starting with "_"
         });
+		console.log('SCSS files:');
 		console.log(sassFiles);
         var configObj = {};
         for (i = 0; i < sassFiles.length; i++) {

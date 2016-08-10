@@ -16,6 +16,7 @@ modGrunt.var.taskBuilders.watchSass = function() {
         modGrunt.var.taskDefs.shell.compile = {
             command: 'grunt compileSass'
         };
+		modGrunt.var.taskArr.push('shell:compile');
     }
     runCompiler();
 
