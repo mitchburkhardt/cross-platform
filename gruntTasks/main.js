@@ -9,7 +9,7 @@ global.modGrunt = {
         path: require('path'),
         taskDefs: {},
         taskArr: [],
-        tasks: ['default', 'build', 'watchSass'],
+        tasks: ['default', 'build', 'watchSass', 'compileSass'],
         task: null,
         taskBuilders: {},
 		devFolder: 'dev',
@@ -81,6 +81,9 @@ switch (modGrunt.var.task) {
         break;
 	case 'watchSass':
         require('./watchSass.js');
+        break;
+	case 'compileSass':
+        require('./compileSass.js');
         break;
     default:
 }

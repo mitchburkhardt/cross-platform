@@ -49,6 +49,7 @@ function getDirectories(srcpath) {
 		return fs.statSync(srcpath + '/' + val).isDirectory();
 	});
 }
+
 function spinServers(){
 	if(dirExists('dev/slides')){
 		app.set('view engine', 'ejs');
