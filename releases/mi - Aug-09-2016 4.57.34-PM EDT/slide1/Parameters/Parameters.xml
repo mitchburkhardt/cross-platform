@@ -1,6 +1,0 @@
-<Sequence Id="a9cfc4f9-be60-480b-a6a8-e7497e6ffa54" xmlns="urn:param-schema">
-<Links>
-	<Link SequenceId="8bca4fc5-9f25-4fc7-8ce8-0c4a2aaf7e7d" />
-	<Link SequenceId="a9cfc4f9-be60-480b-a6a8-e7497e6ffa54" />
-</Links>
-</Sequence>

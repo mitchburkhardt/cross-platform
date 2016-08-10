@@ -32,12 +32,17 @@ modGrunt.var.taskBuilders.compileSass = function() {
             var name = that.split('/')[that.split('/').length - 1];
             return name.substr(0, 1) !== '_'; // filter function to exclude files starting with "_"
         });
-		console.log('SCSS files:');
-		console.log(sassFiles);
+		console.log('\r\n\r\nattempting to compile:');
         var configObj = {};
+		var delim = ',';
         for (i = 0; i < sassFiles.length; i++) {
+			if(i === sassFiles.length-2) delim = ',\r\n        and';
+			else if(i === sassFiles.length-1) delim = '';
+			console.log('    '+sassFiles[i]+delim);
             configObj[sassFiles[i].replace('.scss', '.css')] = sassFiles[i];
         }
+		console.log('\r\n\r\n');
+
         modGrunt.var.taskDefs.sass[0] = {
             options: {
                 style: 'compressed',
