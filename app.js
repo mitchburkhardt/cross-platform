@@ -34,24 +34,6 @@ function createRoute(obj) {
         });
     }
 }
-function restart(server){
-	var timeStamp;
-	(function(){
-		var m = 'AM';
-		var ds = new Date().toString().split(' ');
-		var tz = ds[6].replace('(','').replace(')','');
-		var ts = ds[4].split(':');
-		if(ts[0]*1 > 12){
-			m = 'PM';
-			ts[0] = ts[0] - 12;
-		}
-		ts = ts.join('.')+'-'+m;
-		timeStamp = ts+' '+tz;
-	})();
-	console.log('restarting... - '+timeStamp);
-	server.close();
-	// spinServers();
-}
 function dirExists(dir){
 	var stats;
 	try {
@@ -151,14 +133,3 @@ function spinServers(){
 	}
 }
 spinServers();
-
-
-
-
-var restarter = null;
-watch('./', function(e) {
-	if(restarter) clearTimeout(restarter);
-	restarter = setTimeout(function(){
-		restart(devServer);
-	},550);
-});

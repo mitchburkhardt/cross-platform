@@ -5,7 +5,7 @@
 		bottom = include('../../includes/closeTemplate', locals);
 	}
 	else{
-		script = include('./page.js');
+		script = include('./localassets/page.js');
 		bottom = `<script>
 			app.pageScripts['${locals.filename}'] = function(){
 				${script}

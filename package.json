@@ -2,7 +2,7 @@
   "name": "cross-platform-idetail",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "nodemon --watch ./dev -e js,ejs,json,xml,scss,sass,less,css,txt app.js"
   },
   "private": true,
   "dependencies": {
@@ -28,6 +28,7 @@
     "load-grunt-tasks": "3.5.0",
     "node-static": "0.7.7",
     "node-watch": "^0.4.0",
+    "nodemon": "^1.10.0",
     "path": "0.12.7"
   }
 }

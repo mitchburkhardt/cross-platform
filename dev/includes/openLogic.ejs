@@ -1,16 +1,25 @@
 <%
 	var top;
-	var location;
+
+
+	//TODO: fix paths in CSS for native build
+	//TODO: fix paths in JS for native build
+	//TODO: move local assets to own folder for each slide
+	// var style = include('./localassets/page.js');
 	console.log(locals);
 
 	if(locals.fullPage){
 		top = include('../../includes/openTemplate', locals);
 	}
 	else{
-		//
-		// style = include('./includes/openTemplate', locals);
-		//
-		// top = `<link rel="stylesheet" href="./${style}/content.css" />`;
+
+
+		// if(locals.nativeRoot){
+		// 	style = style.replace(/u/g, 'Width_This')
+		// }
+
+		top = `<link rel="stylesheet" href="./${style}/content.css" />`;
+		top = '';
 	}
 %>
 <%- top %>
