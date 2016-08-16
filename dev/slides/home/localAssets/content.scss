@@ -1,7 +1,0 @@
-#thingy{
-	margin-left: 50px;
-	background-image: url('img/foo.png');
-	&.stuff{
-		background-image: url('../../globalAssets/img/baroo.png');
-	}
-}

@@ -129,6 +129,7 @@ modGrunt.var.taskBuilders.build = function() {
                 expand: true,
                 ext: '.html',
                 options: {
+					// slide: config.slide,
                     fullPage: config.fullPage,
                     buildType: config.buildType,
 					nativeRoot: config.nativeRoot,
@@ -163,55 +164,6 @@ modGrunt.var.taskBuilders.build = function() {
 
     }
     CompileEJS();
-
-    function fixPaths() {
-        modGrunt.var.taskDefs['string-replace'].fixPaths1 = {
-            files: [{
-                expand: true,
-                cwd: compiledFolder + '/' + 'veeva' + ' - ' + timeStamp,
-                src: ['**/*.html', '**/*.css', '**/*.js'],
-                dest: compiledFolder + '/' + 'veeva' + ' - ' + timeStamp
-            }],
-            options: {
-                replacements: [{
-                    pattern: /..\/..\/globalAssets/g,
-                    replacement: 'globalAssets'
-                }]
-            }
-        };
-        modGrunt.var.taskArr.push('string-replace:fixPaths1');
-        modGrunt.var.taskDefs['string-replace'].fixPaths2 = {
-            files: [{
-                expand: true,
-                cwd: compiledFolder + '/' + 'mi' + ' - ' + timeStamp,
-                src: ['**/*.html', '**/*.css', '**/*.js'],
-                dest: compiledFolder + '/' + 'mi' + ' - ' + timeStamp
-            }],
-            options: {
-                replacements: [{
-                    pattern: /..\/..\/globalAssets/g,
-                    replacement: 'globalAssets'
-                }]
-            }
-        };
-        modGrunt.var.taskArr.push('string-replace:fixPaths2');
-        modGrunt.var.taskDefs['string-replace'].fixPaths3 = {
-            files: [{
-                expand: true,
-                cwd: compiledFolder + '/' + 'native' + ' - ' + timeStamp,
-                src: ['**/*.html', '**/*.css', '**/*.js'],
-                dest: compiledFolder + '/' + 'native' + ' - ' + timeStamp
-            }],
-            options: {
-                replacements: [{
-                    pattern: /..\/globalAssets/g,
-                    replacement: 'globalAssets'
-                }]
-            }
-        };
-        modGrunt.var.taskArr.push('string-replace:fixPaths3');
-    }
-    fixPaths();
 
     function CopyShared() {
         for (i = 0; i < slides.length; i++) {

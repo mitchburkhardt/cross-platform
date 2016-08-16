@@ -4,22 +4,20 @@
 
 	//TODO: fix paths in CSS for native build
 	//TODO: fix paths in JS for native build
-	//TODO: move local assets to own folder for each slide
-	// var style = include('./localassets/page.js');
-	console.log(locals);
-
 	if(locals.fullPage){
 		top = include('../../includes/openTemplate', locals);
+		// if(nativeRoot){
+		// 	top = top.replace(/href=".\//g, `href=".\/${locals.home}\/`);
+		// }
+		if(nativeRoot){
+			top = top.replace(/_#/g, 'Width_This');
+		}
+		else{
+			top = top.replace(/_#/g, '');
+		}
 	}
 	else{
-
-
-		// if(locals.nativeRoot){
-		// 	style = style.replace(/u/g, 'Width_This')
-		// }
-
-		top = `<link rel="stylesheet" href="./${style}/content.css" />`;
-		top = '';
+		top = '<link rel="stylesheet" href="./content.css" />';
 	}
 %>
 <%- top %>

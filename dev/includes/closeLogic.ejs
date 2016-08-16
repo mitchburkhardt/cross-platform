@@ -3,9 +3,15 @@
 	var script;
 	if(locals.fullPage){
 		bottom = include('../../includes/closeTemplate', locals);
+		if(nativeRoot){
+			bottom = bottom.replace(/_#/g, `./${locals.home}/`);
+		}
+		else{
+			bottom = bottom.replace(/_#/g, '');
+		}
 	}
 	else{
-		script = include('./localassets/page.js');
+		script = include('./page.js');
 		bottom = `<script>
 			app.pageScripts['${locals.filename}'] = function(){
 				${script}

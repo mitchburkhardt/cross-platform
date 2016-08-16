@@ -62,22 +62,16 @@ function spinServers(){
 
 		createRoute({
 		    url: '/',
-		    webRoot: './dev/slides/home',
-		    file: './dev/router/foo/index.ejs',
+		    webRoot: './dev/slides',
+		    file: './dev/slides/index.ejs',
 		    ejs: true,
 		    locals: {
-				fullPage: false,
+				fullPage: true,
 		        home: HomeSlide,
 				buildType: 'native',
-				filename: 'dev/slides/'+HomeSlide+'/index.ejs',
+				filename: __dirname+'/dev/slides/index.ejs',
 				nativeRoot: true
 		    }
-		});
-		createRoute({
-		    url: '/',
-		    webRoot: './dev/router/foo/',
-			nativeRoot: false,
-			home: HomeSlide
 		});
 		createRoute({
 		    url: '/globalAssets',
@@ -89,11 +83,12 @@ function spinServers(){
 
 		slides.forEach(function(e) {
 			createRoute({
-			    url: '/slides/'+e,
+			    url: '/'+e,
 			    webRoot: './dev/slides/'+e,
 			    file: './dev/slides/'+e+'/index.ejs',
 			    ejs: true,
 				locals:{
+					slide: e,
 					fullPage: false,
 					home: HomeSlide,
 					buildType: 'native',
