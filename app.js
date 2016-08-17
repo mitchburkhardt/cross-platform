@@ -69,7 +69,7 @@ function spinServers(){
 				fullPage: true,
 		        home: HomeSlide,
 				buildType: 'native',
-				filename: __dirname+'/dev/slides/index.ejs',
+				filename: 'dev/slides/index.ejs',
 				nativeRoot: true
 		    }
 		});

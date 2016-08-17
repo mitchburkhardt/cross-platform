@@ -2,7 +2,7 @@
   "name": "cross-platform-idetail",
   "main": "app.js",
   "scripts": {
-    "start": "concurrently --kill-others 'nodemon --watch ./dev -e js,ejs,json,xml,css,txt app.js' 'grunt watchSass'"
+    "start": "concurrently --kill-others 'nodemon --watch ./ --ignore './releases/**' -e js,ejs,json,xml,css,txt app.js' 'grunt watchSass'"
   },
   "private": true,
   "dependencies": {
