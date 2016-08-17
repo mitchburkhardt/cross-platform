@@ -47,6 +47,33 @@ function move_rename(config) {
     modGrunt.var.taskDefs.clean['move_rename-' + mrCounter] = [config.delete];
     modGrunt.var.taskArr.push('clean:move_rename-' + mrCounter);
 }
+function copyFolder(src, dst) {
+	modGrunt.var.taskDefs.copy[dst] = {
+		files: [{
+			cwd: src,
+			src: '**/*',
+			dest: dst,
+			expand: true
+		}]
+	};
+	modGrunt.var.taskArr.push('copy:' + dst);
+}
+function zipFolder(dir, zip){
+	var zipName = zip.replace('.zip', '').split('/');
+	zipName = zipName.pop();
+	modGrunt.var.taskDefs.compress[zip] = {
+		options: {
+			archive: zip
+		},
+		expand: true,
+		cwd: dir,
+		src: ['**/*'],
+		dest: zipName+'/'
+	};
+	modGrunt.var.taskArr.push('compress:'+zip);
+}
+
+
 modGrunt.var.taskBuilders.build = function() {
     var prop;
 
@@ -64,6 +91,9 @@ modGrunt.var.taskBuilders.build = function() {
         modGrunt.var.taskDefs.sass = {};
         modGrunt.var.taskDefs.jsbeautifier = {};
         modGrunt.var.taskDefs['file-creator'] = {};
+        modGrunt.var.taskDefs.zip_directories = {};
+        modGrunt.var.taskDefs.compress = {};
+        modGrunt.var.taskDefs.cssmin = {};
     }
     defineModules();
 
@@ -107,7 +137,7 @@ modGrunt.var.taskBuilders.build = function() {
                 files: [{
                     cwd: devFolder + '/slides',
                     src: '**/*',
-                    dest: compiledFolder + '/' + timeStamp+'/'+willBuild[i],
+                    dest: compiledFolder + '/' + timeStamp + '/' + willBuild[i],
                     expand: true
                 }]
             };
@@ -129,71 +159,57 @@ modGrunt.var.taskBuilders.build = function() {
                 expand: true,
                 ext: '.html',
                 options: {
-					slide: config.slide,
+                    slide: config.slide,
                     fullPage: config.fullPage,
                     buildType: config.buildType,
-					nativeRoot: config.nativeRoot,
-					home: config.home
+                    nativeRoot: config.nativeRoot,
+                    home: config.home
                 }
             };
             modGrunt.var.taskArr.push('ejs:' + config.id1 + '-' + config.id2);
         }
+        var configObj;
         var rel = devFolder + '/slides';
         var makeFull;
-		var FrameIndex;
-		var slideID;
+        var nativeRoot;
+        var FrameIndex;
+        var slideID;
         for (i = 0; i < srcArr.length; i++) {
             for (j = 0; j < willBuild.length; j++) {
-				FrameIndex = srcArr[i] === './dev/slides/index.ejs';
-                makeFull = true;
-                if (willBuild[j] === 'native' && !FrameIndex) makeFull = false;
-				if(!FrameIndex || willBuild[j] === 'native'){
-					slideID = srcArr[i].split('/')[3];
-					console.log(slideID);
-					BuildTask({
-	                    id1: i,
-	                    id2: j,
-	                    cwd: rel,
-	                    src: srcArr[i].replace(rel + '/', ''),
-	                    dest: compiledFolder.replace('./', '') + '/' + timeStamp+'/'+willBuild[i],
-	                    fullPage: makeFull,
-	                    buildType: willBuild[j],
-						nativeRoot: FrameIndex,
-						home: HomeSlide,
-						slide: slideID
-	                });
-				}
+                if (srcArr[i] !== './dev/slides/index.ejs' || willBuild[j] === 'native') {
+                    FrameIndex = (srcArr[i] === './dev/slides/index.ejs');
+                    nativeRoot = (FrameIndex && willBuild[j] === 'native');
+                    makeFull = (willBuild[j] !== 'native' || FrameIndex);
+                    slideID = srcArr[i].split('/')[3];
+                    configObj = {
+                        id1: i,
+                        id2: j,
+                        cwd: rel,
+                        src: srcArr[i].replace(rel + '/', ''),
+                        dest: compiledFolder.replace('./', '') + '/' + timeStamp + '/' + willBuild[j],
+                        fullPage: makeFull,
+                        buildType: willBuild[j],
+                        nativeRoot: FrameIndex,
+                        home: HomeSlide,
+                        slide: slideID
+                    };
+                    BuildTask(configObj);
+                }
             }
         }
-
     }
     CompileEJS();
 
     function CopyShared() {
+
         for (i = 0; i < slides.length; i++) {
             for (j = 0; j < willBuild.length; j++) {
                 if (willBuild[j] === 'native') {
                     if (!i) {
-                        modGrunt.var.taskDefs.copy['shared-' + i + '-' + j] = {
-                            files: [{
-                                cwd: devFolder + '/globalAssets',
-                                src: '**/*',
-                                dest: compiledFolder + '/' + timeStamp+'/'+willBuild[i] + '/globalAssets',
-                                expand: true
-                            }]
-                        };
-                        modGrunt.var.taskArr.push('copy:shared-' + i + '-' + j);
+                        copyFolder(devFolder + '/globalAssets', compiledFolder + '/' + timeStamp + '/' + willBuild[i] + '/globalAssets');
                     }
                 } else {
-                    modGrunt.var.taskDefs.copy['shared-' + i + '-' + j] = {
-                        files: [{
-                            cwd: devFolder + '/globalAssets',
-                            src: '**/*',
-                            dest: compiledFolder + '/' + timeStamp+'/'+willBuild[i] + '/' + slides[i] + '/globalAssets',
-                            expand: true
-                        }]
-                    };
-                    modGrunt.var.taskArr.push('copy:shared-' + i + '-' + j);
+                    copyFolder(devFolder + '/globalAssets', compiledFolder + '/' + timeStamp + '/' + willBuild[j] + '/' + slides[i] + '/globalAssets');
                 }
             }
         }
@@ -205,9 +221,9 @@ modGrunt.var.taskBuilders.build = function() {
             modGrunt.var.taskDefs['string-replace']['setPlatform-' + willBuild[i]] = {
                 files: [{
                     expand: true,
-                    cwd: compiledFolder + '/' + timeStamp+'/'+willBuild[i],
+                    cwd: compiledFolder + '/' + timeStamp + '/' + willBuild[i],
                     src: ['**/*.html'],
-                    dest: compiledFolder + '/' + timeStamp+'/'+willBuild[i]
+                    dest: compiledFolder + '/' + timeStamp + '/' + willBuild[i]
                 }],
                 options: {
                     replacements: [{
@@ -284,11 +300,11 @@ modGrunt.var.taskBuilders.build = function() {
             var slideName = projectConfig.slides[slideIndex][0];
             var guid = projectConfig.slides[slideIndex][1];
             modGrunt.var.taskDefs['file-creator']['parameters-' + slideName] = {};
-            modGrunt.var.taskDefs['file-creator']['parameters-' + slideName][compiledFolder +'/' + timeStamp + '/mi/' + projectConfig.slides[prop][0] + '/Parameters/Parameters.xml'] = function(fs, fd, done) {
-			    fs.writeSync(fd, `<Sequence Id="${guid}" xmlns="urn:param-schema">\r\n${endOfFile}`);
+            modGrunt.var.taskDefs['file-creator']['parameters-' + slideName][compiledFolder + '/' + timeStamp + '/mi/' + projectConfig.slides[prop][0] + '/Parameters/Parameters.xml'] = function(fs, fd, done) {
+                fs.writeSync(fd, `<Sequence Id="${guid}" xmlns="urn:param-schema">\r\n${endOfFile}`);
                 done();
-			};
-			modGrunt.var.taskArr.push('file-creator:parameters-' + slideName);
+            };
+            modGrunt.var.taskArr.push('file-creator:parameters-' + slideName);
         }
         var bottomXML = '<Links>';
         for (prop in projectConfig.slides) {
@@ -308,8 +324,35 @@ modGrunt.var.taskBuilders.build = function() {
         modGrunt.var.taskArr.push('clean:sourceCode');
     }
     removeSourceCode();
-	function MinCss(){
+
+    function MinCss() {
+		modGrunt.var.taskDefs.cssmin.output = {
+            files: [{
+                expand: true,
+                cwd: compiledFolder,
+                src: ['**/*.css'],
+                dest: compiledFolder,
+                ext: '.css'
+            }]
+        };
+		modGrunt.var.taskArr.push('cssmin:output');
 
 	}
-	MinCss();
+    MinCss();
+
+	function archiveSource() {
+		zipFolder(devFolder, compiledFolder + '/' + timeStamp + '/sourceCode.zip');
+    }
+    archiveSource();
+
+	function zipSlides(){
+		for (i=0; i<slides.length; i++) {
+			for (j=0; j<willBuild.length; j++) {
+				if(willBuild[j] !== 'native'){
+					zipFolder(compiledFolder + '/' + timeStamp+'/'+willBuild[j]+'/'+slides[i], compiledFolder + '/' + timeStamp+'/'+willBuild[j]+'/zipped/'+slides[i]+'.zip');
+				}
+			}
+		}
+	}
+	zipSlides();
 };

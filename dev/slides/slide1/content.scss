@@ -1,9 +1,10 @@
 #thingy{
 	margin-left: 50px;
-	background-image: url('img/foo.png');
-	width: 100px;
-	height: 100px;
+	background-image: url('_#img/foo.png');
+	width: 500px;
+	height: 500px;
 	&.stuff{
-		background-image: url('../../globalAssets/img/bar.png');
+		background-image: url("_#../../globalAssets/img/bar.png");
+		background-image: url(_#../../globalAssets/img/bar.png);
 	}
 }
