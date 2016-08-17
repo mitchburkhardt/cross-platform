@@ -45,7 +45,7 @@ modGrunt.var.taskBuilders.compileSass = function() {
 
         modGrunt.var.taskDefs.sass[0] = {
             options: {
-                style: 'compressed',
+                style: 'expanded',
                 sourcemap: 'auto'
             },
             files: configObj
