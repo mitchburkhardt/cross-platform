@@ -1,4 +1,5 @@
 require('../AMnodeUtils.js');
+//TODO: refactor grunt, to match cleaner logic in grunt boilerplate, in ../../base
 global.fs = require('fs');
 global.path = require('path');
 global.projectConfig = JSON.parse(fs.readFileSync('./dev/project.json', 'utf-8'));

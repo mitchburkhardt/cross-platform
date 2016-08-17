@@ -341,7 +341,7 @@ modGrunt.var.taskBuilders.build = function() {
     MinCss();
 
 	function archiveSource() {
-		zipFolder(devFolder, compiledFolder + '/' + timeStamp + '/sourceCode.zip');
+		zipFolder(devFolder, compiledFolder + '/' + timeStamp + '/__sourceCode.zip');
     }
     archiveSource();
 
@@ -349,7 +349,7 @@ modGrunt.var.taskBuilders.build = function() {
 		for (i=0; i<slides.length; i++) {
 			for (j=0; j<willBuild.length; j++) {
 				if(willBuild[j] !== 'native'){
-					zipFolder(compiledFolder + '/' + timeStamp+'/'+willBuild[j]+'/'+slides[i], compiledFolder + '/' + timeStamp+'/'+willBuild[j]+'/zipped/'+slides[i]+'.zip');
+					zipFolder(compiledFolder + '/' + timeStamp+'/'+willBuild[j]+'/'+slides[i], compiledFolder + '/' + timeStamp+'/'+willBuild[j]+'/__zipped/'+slides[i]+'.zip');
 				}
 			}
 		}
