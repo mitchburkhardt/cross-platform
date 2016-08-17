@@ -1,24 +1,26 @@
 <%
-	var bottom = '';
-	var script;
-	if(locals.fullPage){
-		bottom = include('../../includes/closeTemplate', locals);
-		if(nativeRoot){
-			bottom = bottom.replace(/_#/g, `./${locals.home}/`);
-		}
-		else{
-			bottom = bottom.replace(/_#/g, '');
-		}
-	}
-	else{
-		script = include('./page.js');
-		bottom = `<script>
-			app.pageScripts['${locals.filename}'] = function(){
-				${script}
-			};
-			app.pageScripts['${locals.filename}']();
-		</script>`;
-	}
+	var bottom;
+	// var script;
+	// if(locals.fullPage){
+	// 	bottom = include('../../includes/closeTemplate', locals);
+	// 	if(nativeRoot){
+	// 		bottom = bottom.replace(/_#/g, `./${locals.home}/`);
+	// 	}
+	// 	else{
+	// 		bottom = bottom.replace(/_#/g, '');
+	// 	}
+	// }
+	// else{
+	// 	script = include('./page.js');
+	// 	bottom = `<script>
+	// 		app.pageScripts['${locals.filename}'] = function(){
+	// 			${script}
+	// 		};
+	// 		app.pageScripts['${locals.filename}']();
+	// 	</script>`;
+	// }
+
+	bottom = '<br/>bottom of document'
 
 %>
 
