@@ -3,8 +3,6 @@ function defineTasks(){
 }
 defineTasks();
 
-
-
 function showMSG() {
     taskDefs.shell.showMSG = {
         command: 'echo This project has no default task'
