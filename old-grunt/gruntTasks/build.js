@@ -47,33 +47,33 @@ function move_rename(config) {
     modGrunt.var.taskDefs.clean['move_rename-' + mrCounter] = [config.delete];
     modGrunt.var.taskArr.push('clean:move_rename-' + mrCounter);
 }
+
 function copyFolder(src, dst) {
-	modGrunt.var.taskDefs.copy[dst] = {
-		files: [{
-			cwd: src,
-			src: '**/*',
-			dest: dst,
-			expand: true
-		}]
-	};
-	modGrunt.var.taskArr.push('copy:' + dst);
-}
-function zipFolder(dir, zip){
-	var zipName = zip.replace('.zip', '').split('/');
-	zipName = zipName.pop();
-	modGrunt.var.taskDefs.compress[zip] = {
-		options: {
-			archive: zip
-		},
-		expand: true,
-		cwd: dir,
-		src: ['**/*'],
-		dest: zipName+'/'
-	};
-	modGrunt.var.taskArr.push('compress:'+zip);
+    modGrunt.var.taskDefs.copy[dst] = {
+        files: [{
+            cwd: src,
+            src: '**/*',
+            dest: dst,
+            expand: true
+        }]
+    };
+    modGrunt.var.taskArr.push('copy:' + dst);
 }
 
-
+function zipFolder(dir, zip) {
+    var zipName = zip.replace('.zip', '').split('/');
+    zipName = zipName.pop();
+    modGrunt.var.taskDefs.compress[zip] = {
+        options: {
+            archive: zip
+        },
+        expand: true,
+        cwd: dir,
+        src: ['**/*'],
+        dest: zipName + '/'
+    };
+    modGrunt.var.taskArr.push('compress:' + zip);
+}
 modGrunt.var.taskBuilders.build = function() {
     var prop;
 
@@ -201,7 +201,6 @@ modGrunt.var.taskBuilders.build = function() {
     CompileEJS();
 
     function CopyShared() {
-
         for (i = 0; i < slides.length; i++) {
             for (j = 0; j < willBuild.length; j++) {
                 if (willBuild[j] === 'native') {
@@ -232,6 +231,27 @@ modGrunt.var.taskBuilders.build = function() {
     setPlatform();
 
     function PrettifyHTML() {
+        modGrunt.var.taskDefs['string-replace'].minify = {
+            files: [{
+                expand: true,
+                cwd: compiledFolder,
+                src: ['**/*.html'],
+                dest: compiledFolder
+            }],
+            options: {
+                replacements: [{
+                    pattern: /\t/gm,
+                    replacement: ''
+                }, {
+                    pattern: /\r\n/gm,
+                    replacement: ''
+                }, {
+                    pattern: /\n/gm,
+                    replacement: ''
+                }]
+            }
+        };
+        modGrunt.var.taskArr.push('string-replace:minify');
         modGrunt.var.taskDefs.jsbeautifier.BuiltFiles = {
             src: [compiledFolder + '/**/*.html'],
             options: {
@@ -242,21 +262,6 @@ modGrunt.var.taskBuilders.build = function() {
             }
         };
         modGrunt.var.taskArr.push('jsbeautifier:BuiltFiles');
-        modGrunt.var.taskDefs['string-replace'].emptyLines = {
-            files: [{
-                expand: true,
-                cwd: compiledFolder,
-                src: ['**/*.html'],
-                dest: compiledFolder
-            }],
-            options: {
-                replacements: [{
-                    pattern: /^(?:[\t ]*(?:\r?\n|\r))+/gm,
-                    replacement: ''
-                }]
-            }
-        };
-        modGrunt.var.taskArr.push('string-replace:emptyLines');
     }
     PrettifyHTML();
 
@@ -320,7 +325,7 @@ modGrunt.var.taskBuilders.build = function() {
     removeSourceCode();
 
     function MinCss() {
-		modGrunt.var.taskDefs.cssmin.output = {
+        modGrunt.var.taskDefs.cssmin.output = {
             files: [{
                 expand: true,
                 cwd: compiledFolder,
@@ -329,24 +334,23 @@ modGrunt.var.taskBuilders.build = function() {
                 ext: '.css'
             }]
         };
-		modGrunt.var.taskArr.push('cssmin:output');
-
-	}
+        modGrunt.var.taskArr.push('cssmin:output');
+    }
     MinCss();
 
-	function archiveSource() {
-		zipFolder(devFolder, compiledFolder + '/' + timeStamp + '/__sourceCode.zip');
+    function archiveSource() {
+        zipFolder(devFolder, compiledFolder + '/' + timeStamp + '/__sourceCode.zip');
     }
     archiveSource();
 
-	function zipSlides(){
-		for (i=0; i<slides.length; i++) {
-			for (j=0; j<willBuild.length; j++) {
-				if(willBuild[j] !== 'native'){
-					zipFolder(compiledFolder + '/' + timeStamp+'/'+willBuild[j]+'/'+slides[i], compiledFolder + '/' + timeStamp+'/'+willBuild[j]+'/__zipped/'+slides[i]+'.zip');
-				}
-			}
-		}
-	}
-	zipSlides();
+    function zipSlides() {
+        for (i = 0; i < slides.length; i++) {
+            for (j = 0; j < willBuild.length; j++) {
+                if (willBuild[j] !== 'native') {
+                    zipFolder(compiledFolder + '/' + timeStamp + '/' + willBuild[j] + '/' + slides[i], compiledFolder + '/' + timeStamp + '/' + willBuild[j] + '/__zipped/' + slides[i] + '.zip');
+                }
+            }
+        }
+    }
+    zipSlides();
 };

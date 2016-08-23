@@ -231,14 +231,15 @@ function PrettifyHTML() {
 	taskDefs.jsbeautifier.BuiltFiles = {
 		src: [compiledFolder + '/**/*.html'],
 		options: {
-			js: {
+			html: {
 				indentSize: 1,
-				indent_char: '\t'
+				indent_char: '\t',
+				unformatted: ["a", "sub", "sup", "b", "i", "u", "style"],
 			}
 		}
 	};
 	taskArr.push('jsbeautifier:BuiltFiles');
-	taskDefs['string-replace'].emptyLines = {
+	taskDefs['string-replace'].cleanUp = {
 		files: [{
 			expand: true,
 			cwd: compiledFolder,
@@ -246,13 +247,29 @@ function PrettifyHTML() {
 			dest: compiledFolder
 		}],
 		options: {
-			replacements: [{
-				pattern: /(^(?:[\t ]*(?:\r?\n|\r))+)(?=[^>]*(<|$))/gm,
-				replacement: ''
-			}]
+			replacements: [
+				{
+					pattern: /(^(?:[\t ]*(?:\r?\n|\r))+)(?=[^>]*(<|$))/gm,
+					replacement: ''
+				}, {
+					pattern: /\r\n\/\*# sourceMappingURL/gm,
+					replacement: '/*# sourceMappingURL'
+				}, {
+					pattern: /\n\/\*# sourceMappingURL/gm,
+					replacement: '/*# sourceMappingURL'
+				}, {
+					pattern: /\n<\/style>/gm,
+					replacement: '</style>'
+				}, {
+					pattern: /\r\n<\/style>/gm,
+					replacement: '</style>'
+				}
+
+			]
 		}
 	};
-	taskArr.push('string-replace:emptyLines');
+	taskArr.push('string-replace:cleanUp');
+
 }
 PrettifyHTML();
 

@@ -102,17 +102,14 @@ function spinServers(){
 			});
 		});
 
-
 		devServer = app.listen(SourcePort, function() {
 		    console.log('Source code running on http://localhost:' + SourcePort);
 		});
-
 
 	}
 	else{
 		console.log('source code does not exist in: ./dev');
 	}
-
 
 	var static = require('node-static');
 	var http = require('http');
