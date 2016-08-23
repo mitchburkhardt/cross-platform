@@ -247,7 +247,7 @@ function PrettifyHTML() {
 		}],
 		options: {
 			replacements: [{
-				pattern: /^(?:[\t ]*(?:\r?\n|\r))+/gm,
+				pattern: /(^(?:[\t ]*(?:\r?\n|\r))+)(?=[^>]*(<|$))/gm,
 				replacement: ''
 			}]
 		}

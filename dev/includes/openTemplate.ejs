@@ -3,11 +3,18 @@
 <head>
 	<meta name="viewport" content="width=1024, initial-scale=1, user-scalable=no">
 	<%
-		var style = include(`../slides/${slide}/complete.css`, locals);
-		if(locals.nativeRoot){
-			style = style.replace(/_#..\/..\/globalAssets/g, '.\/globalAssets').replace(/_#/g, `./${locals.slide}/`);
+		var style;
+		if(locals.buildType === 'native'){
+			if(locals.nativeRoot){
+				style = include(`../slides/${slide}/complete.css`, locals);
+			}
+			else {
+				style = include(`../slides/${slide}/content.css`, locals);
+			}
+			style = style.replace(/_#..\/..\/globalAssets/g, '.\/globalAssets').replace(/_#/g, `./${locals.slide}/`).replace('sourceMappingURL=', `sourceMappingURL=${locals.slide}/`);
 		}
 		else{
+			style = include(`../slides/${slide}/complete.css`, locals);
 			style = style.replace(/_#/g, './').replace(/..\/..\/globalAssets/g, '.\/globalAssets').replace(/.\/.\//g, '.\/').replace(/.\/\//g, '.\/');
 		}
 	%>
