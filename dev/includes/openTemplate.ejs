@@ -4,14 +4,11 @@
 	<meta name="viewport" content="width=1024, initial-scale=1, user-scalable=no">
 	<%
 		var style;
+		var style2 = '';
 		if(locals.buildType === 'native'){
-			if(locals.nativeRoot){
-				style = include(`../slides/${slide}/complete.css`, locals);
-			}
-			else {
-				style = include(`../slides/${slide}/content.css`, locals);
-			}
-			style = style.replace(/_#..\/..\/globalAssets/g, '.\/globalAssets').replace(/_#/g, `./${locals.slide}/`).replace('sourceMappingURL=', `sourceMappingURL=${locals.slide}/`);
+			style = include(`../includes/outer.css`, locals);
+			style2 = '<style>'+include(`../slides/${slide}/content.css`, locals)+'</style>';
+			style2 = style2.replace(/_#..\/..\/globalAssets/g, '.\/globalAssets').replace(/_#/g, `./${locals.slide}/`).replace('sourceMappingURL=', `sourceMappingURL=${locals.slide}/`);
 		}
 		else{
 			style = include(`../slides/${slide}/complete.css`, locals);
@@ -27,3 +24,4 @@
 	<div id="container">
 		<div class="view"></div>
 		<div class="view active">
+		<%- style2 %>
