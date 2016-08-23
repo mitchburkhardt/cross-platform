@@ -69,7 +69,8 @@ function spinServers(){
 		        home: HomeSlide,
 				buildType: 'native',
 				filename: 'dev/slides/index.ejs',
-				nativeRoot: true
+				nativeRoot: true,
+				compiled: false
 		    }
 		});
 		createRoute({
@@ -97,7 +98,8 @@ function spinServers(){
 					fullPage: false,
 					home: HomeSlide,
 					buildType: 'native',
-					filename: 'dev/slides/'+e+'/index.ejs'
+					filename: 'dev/slides/'+e+'/index.ejs',
+					compiled: false
 				}
 			});
 		});

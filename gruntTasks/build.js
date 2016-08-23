@@ -159,7 +159,8 @@ function CompileEJS() {
 				fullPage: config.fullPage,
 				buildType: config.buildType,
 				nativeRoot: config.nativeRoot,
-				home: config.home
+				home: config.home,
+				compiled: true
 			}
 		};
 		taskArr.push('ejs:' + config.id1 + '-' + config.id2);
