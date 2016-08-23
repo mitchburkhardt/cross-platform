@@ -6,7 +6,7 @@
 		var style;
 		var style2 = '';
 		if(locals.buildType === 'native'){
-			style = include(`../includes/outer.css`, locals);
+			style = include(`../includes/outer.css`, locals).replace('sourceMappingURL=', 'sourceMappingURL=dev/includes/');
 			style2 = '<style>'+include(`../slides/${slide}/content.css`, locals)+'</style>';
 			style2 = style2.replace(/_#..\/..\/globalAssets/g, '.\/globalAssets').replace(/_#/g, `./${locals.slide}/`).replace('sourceMappingURL=', `sourceMappingURL=${locals.slide}/`);
 		}

@@ -79,7 +79,13 @@ function spinServers(){
 			nativeRoot: false,
 			home: HomeSlide
 		});
-
+		createRoute({
+			url: '/dev/includes/',
+			webRoot: './dev/includes',
+			ejs: false,
+			nativeRoot: false,
+			home: HomeSlide
+		});
 		slides.forEach(function(e) {
 			createRoute({
 			    url: '/'+e,

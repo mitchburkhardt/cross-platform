@@ -9,9 +9,8 @@
 	}
 	else{
 		top = `<style>${include('./content.css', locals)}</style>`;
-		top = top.replace(/_#..\/..\/globalAssets/g, '.\/globalAssets').replace(/_#/g, `./${locals.slide}/`).replace('sourceMappingURL=');
+		top = top.replace(/_#..\/..\/globalAssets/g, '.\/globalAssets').replace(/_#/g, `./${locals.slide}/`).replace('sourceMappingURL=', `sourceMappingURL=${locals.slide}/`);
 	}
-
-
+	console.log(locals);
 %>
 <%- top %>
