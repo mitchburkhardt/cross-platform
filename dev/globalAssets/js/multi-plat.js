@@ -1,3 +1,5 @@
+// TODO: scrolling ISI feature
+// TODO: framework navigation (all 3)
 var app = {
     nav: {
         var: {
