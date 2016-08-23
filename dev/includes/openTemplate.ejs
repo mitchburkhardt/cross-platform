@@ -2,10 +2,18 @@
 <html>
 <head>
 	<meta name="viewport" content="width=1024, initial-scale=1, user-scalable=no">
-	<link rel="stylesheet" href="_#./complete.css">
 	<%
-		var style = include('../../includes/openTemplate', locals);
+		var style = include(`../slides/${slide}/complete.css`, locals);
+		if(locals.nativeRoot){
+			style = style.replace(/_#..\/..\/globalAssets/g, '.\/globalAssets').replace(/_#/g, `./${locals.slide}/`);
+		}
+		else{
+			style = style.replace(/_#/g, './').replace(/..\/..\/globalAssets/g, '.\/globalAssets').replace(/.\/.\//g, '.\/').replace(/.\/\//g, '.\/');
+		}
 	%>
+	<%- `<style>${style}</style>` %>
+
+
 </head>
 <body>
 <div id="wrapper">

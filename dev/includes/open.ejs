@@ -1,26 +1,19 @@
 <%
 	var top;
-	//
-	//
-	// //TODO: fix paths in CSS for native build
-	// //TODO: fix paths in JS for native build
-	// if(locals.fullPage){
-	// 	top = '';
-	// 	// if(nativeRoot){
-	// 	// 	top = top.replace(/href=".\//g, `href=".\/${locals.home}\/`);
-	// 	// }
-	// 	if(nativeRoot){
-	// 		top = top.replace(/_#/g, 'Width_This');
-	// 	}
-	// 	else{
-	// 		top = top.replace(/_#/g, '');
-	// 	}
-	// }
-	// else{
-	// 	top = '<link rel="stylesheet" href="./content.css" />';
-	// }
 
-	top = 'top of document <br/>'
+
+	if(locals.nativeRoot){
+		locals.slide = locals.home;
+		top = include('../../includes/openTemplate', locals);
+	}
+	else if(locals.fullPage){
+		top = include('../../includes/openTemplate', locals);
+	}
+	else{
+		top = `<style>${include('./content.css', locals)}</style>`;
+		top = top.replace(/_#..\/..\/globalAssets/g, '.\/globalAssets').replace(/_#/g, `./${locals.slide}/`);
+	}
+
 
 %>
 <%- top %>

@@ -1,5 +1,4 @@
 var app = {
-    pageScripts: {},
     nav: {
         var: {
             view: {},

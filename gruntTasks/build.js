@@ -224,13 +224,7 @@ modGrunt.var.taskBuilders.build = function() {
                     cwd: compiledFolder + '/' + timeStamp + '/' + willBuild[i],
                     src: ['**/*.html'],
                     dest: compiledFolder + '/' + timeStamp + '/' + willBuild[i]
-                }],
-                options: {
-                    replacements: [{
-                        pattern: 'desktop.js',
-                        replacement: willBuild[i] + '.js'
-                    }]
-                }
+                }]
             };
             modGrunt.var.taskArr.push('string-replace:setPlatform-' + willBuild[i]);
         }
@@ -306,11 +300,11 @@ modGrunt.var.taskBuilders.build = function() {
             };
             modGrunt.var.taskArr.push('file-creator:parameters-' + slideName);
         }
-        var bottomXML = '<Links>';
+        var bottomXML = '\t<Links>';
         for (prop in projectConfig.slides) {
-            bottomXML += `\r\n\t<Link SequenceId="${projectConfig.slides[prop][1]}" />`;
+            bottomXML += `\r\n\t\t<Link SequenceId="${projectConfig.slides[prop][1]}" />`;
         }
-        bottomXML += '\r\n</Links>\r\n</Sequence>';
+        bottomXML += '\r\n\t</Links>\r\n</Sequence>';
         for (prop in projectConfig.slides) {
             buildTask(prop, bottomXML);
         }

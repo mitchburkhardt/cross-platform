@@ -7,6 +7,7 @@ app.nav.imgpreload = function(b, f) {
 			d === b.length && f && f(c)
 		}, a = 0; a < b.length; a++) c[a] = new Image, c[a].onabort = e, c[a].onerror = e, c[a].onload = e, c[a].src = b[a]
 };
+app.pageScripts = {};
 
 app.nav.icheckImages = function(element, callback) {
 	var that = this;

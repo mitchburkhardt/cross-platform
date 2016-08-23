@@ -6,6 +6,28 @@
 <script src="_#../../globalAssets/js/tappy.min.js" charset="utf-8"></script>
 <script src="_#../../globalAssets/js/unify.min.js" charset="utf-8"></script>
 <script src="_#../../globalAssets/js/multi-plat.js" charset="utf-8"></script>
-<script src="_#../../globalAssets/js/platform-specifics/desktop.js" charset="utf-8"></script>
-<script src="_#./page.js" charset="utf-8"></script>
+<%
+	var platformScript = `
+		<script src="_#../../globalAssets/js/platform-specifics/${locals.buildType}.js" charset="utf-8"></script>
+	`;
+%>
+<%- platformScript %>
+<%
+	var script = include(`../slides/${slide}/page.js`, locals);
+	if(locals.buildType === 'native'){
+		script = script.replace(/_#..\/..\/globalAssets/g, '.\/globalAssets').replace(/_#/g, `./${locals.slide}/`);
+		script = `
+			app.pageScripts['${locals.slide}'] = function(){
+				${script}
+			};
+			app.pageScripts['${locals.slide}']();
+		`;
+	}
+	else{
+		script = script.replace(/_#/g, './').replace(/..\/..\/globalAssets/g, '.\/globalAssets').replace(/.\/.\//g, '.\/').replace(/.\/\//g, '.\/');
+	}
+
+
+%>
+<%- `<script type="text/javascript">${script}</script>` %>
 </html>

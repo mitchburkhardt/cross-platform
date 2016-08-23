@@ -1,27 +1,30 @@
 <%
 	var bottom;
-	// var script;
-	// if(locals.fullPage){
-	// 	bottom = include('../../includes/closeTemplate', locals);
-	// 	if(nativeRoot){
-	// 		bottom = bottom.replace(/_#/g, `./${locals.home}/`);
-	// 	}
-	// 	else{
-	// 		bottom = bottom.replace(/_#/g, '');
-	// 	}
-	// }
-	// else{
-	// 	script = include('./page.js');
-	// 	bottom = `<script>
-	// 		app.pageScripts['${locals.filename}'] = function(){
-	// 			${script}
-	// 		};
-	// 		app.pageScripts['${locals.filename}']();
-	// 	</script>`;
-	// }
+	var script;
+	if(locals.buildType === 'native'){
+		if(locals.nativeRoot){
+			locals.slide = locals.home;
+			bottom = include('../../includes/closeTemplate', locals);
+			bottom = bottom.replace(/_#..\/..\/globalAssets/g, '.\/globalAssets').replace(/_#/g, `./${locals.slide}/`);
+		}
+		else{
+			script = include(`../${slide}/page.js`, locals);
+			script = script.replace(/_#..\/..\/globalAssets/g, '.\/globalAssets').replace(/_#/g, `./${locals.slide}/`);
+			script = `
+				app.pageScripts['${locals.slide}'] = function(){
+					${script}
+				};
+				app.pageScripts['${locals.slide}']();
+			`;
+			bottom = `<script type="text/javascript">${script}</script>`;
+		}
+	}
+	else {
+		bottom = include('../../includes/closeTemplate', locals);
+		bottom = bottom.replace(/_#/g, './').replace(/..\/..\/globalAssets/g, '.\/globalAssets').replace(/.\/.\//g, '.\/').replace(/.\/\//g, '.\/');
+	}
 
-	bottom = '<br/>bottom of document'
+
 
 %>
-
 <%- bottom %>

@@ -10,7 +10,7 @@ var express = require('express'),
 	watch = require('node-watch'),
 	watcher = false,
 	projectConfig = JSON.parse(fs.readFileSync('./dev/project.json', 'utf-8')),
-	HomeSlide = projectConfig.slides[1][0],
+	HomeSlide = projectConfig.slides[0][0],
 	devServer;
 	// TODO: scrolling ISI feature
 	// TODO: framework navigation (all 3)
