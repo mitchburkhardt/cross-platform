@@ -1,10 +1,8 @@
-if (!modGrunt.var.taskDefs) modGrunt.var.taskDefs = {};
 var devFolder = './dev';
-modGrunt.var.taskBuilders.watchSass = function() {
     var prop;
 
     function defineModules() {
-        modGrunt.var.taskDefs.shell = {
+        taskDefs.shell = {
             options: {
                 stderr: false
             }
@@ -13,16 +11,16 @@ modGrunt.var.taskBuilders.watchSass = function() {
     defineModules();
 
     function runCompiler() {
-        modGrunt.var.taskDefs.shell.compile = {
+        taskDefs.shell.compile = {
             command: 'grunt compileSass'
         };
-		modGrunt.var.taskArr.push('shell:compile');
+		taskArr.push('shell:compile');
     }
     runCompiler();
 
 
     function watchChanges() {
-        modGrunt.var.taskDefs.watch = {
+        taskDefs.watch = {
             css: {
                 files: ['**/*.scss'],
                 tasks: ['shell:compile'],
@@ -31,7 +29,6 @@ modGrunt.var.taskBuilders.watchSass = function() {
                 }
             }
         };
-		modGrunt.var.taskArr.push('watch:css');
+		taskArr.push('watch:css');
     }
     watchChanges();
-};
