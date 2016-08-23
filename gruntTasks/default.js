@@ -1,16 +1,14 @@
-if(!modGrunt.var.taskDefs) modGrunt.var.taskDefs = {};
+function defineTasks(){
+	taskDefs.shell = {options: {stderr: false}};
+}
+defineTasks();
 
-modGrunt.var.taskBuilders.default = function() {
-    function showMSG() {
-        global.modGrunt.var.taskDefs.shell = {
-            options: {
-                stderr: false
-            },
-            showMSG: {
-                command: 'echo This project has no default task'
-            }
-        };
-        global.modGrunt.var.taskArr.push('shell:showMSG');
-    }
-    showMSG();
-};
+
+
+function showMSG() {
+    taskDefs.shell.showMSG = {
+        command: 'echo This project has no default task'
+    };
+    taskArr.push('shell:showMSG');
+}
+showMSG();

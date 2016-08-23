@@ -8,7 +8,7 @@ body{
 	height: 1536px;
 	overflow: hidden;
 	position: relative;
-	background-color: #fff;
+background-color: #fff;
 	.view{
 		@include fillParent();
 		display: none;
