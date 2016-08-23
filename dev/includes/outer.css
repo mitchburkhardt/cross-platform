@@ -47,6 +47,27 @@ body {
   position: relative;
   background-color: #fff;
 }
+#container #bottomScroller {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 85%;
+  height: 400px;
+  background-color: red;
+  z-index: 10;
+}
+#container #bottomScroller .inner {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  height: calc(100% - 50px);
+  width: calc(100% - 50px);
+  box-sizing: border-box;
+  padding-right: 15px;
+}
+#container .scrollContainer .inner {
+  overflow: hidden;
+}
 #container .view {
   position: absolute;
   top: 0;
