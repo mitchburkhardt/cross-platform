@@ -1,3 +1,4 @@
+// TODO: GENERATE thumb = ./media/images/thumbnails/200x150.jpg for MI touch
 var devFolder = './dev';
 var compiledFolder = './releases';
 var buildTypes = ['-all', '-native', '-veeva', '-mi'];
