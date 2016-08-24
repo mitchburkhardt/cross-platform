@@ -80,7 +80,14 @@ var app = {
 			setTimeout(function(){
 				that.spawn(config);
 			},0);
+		},
+		scrollTo: function(name, x, y){
+			this.scroller[name].scrollTo(x, y);
+		},
+		get(name){
+			return this.scroller[name];
 		}
+
 	},
 	bottomScroller: function(){
 		var that = this;
@@ -89,25 +96,23 @@ var app = {
 				name: 'bottomScroller',
 				location: '#bottomScroller',
 				tap: function(e){
-					// console.log('_____________________');
-					// console.log('binding for tapping bottom scroller goes here');
-					// console.log('tap event object:');
-					// console.log(e);
-					// console.log('_____________________');
+					console.log('_____________________');
+					console.log('binding for tapping bottom scroller goes here');
+					console.log('tap event object:');
+					console.log(e);
+					console.log('_____________________');
 
 				},
 				scroll: function(e){
-					// console.log('_____________________');
-					// console.log('binding for scrolling bottom scroller goes here');
-					// console.log('scroll event object:');
-					// console.log(e);
-					// console.log('_____________________');
+					console.log('_____________________');
+					console.log('binding for scrolling bottom scroller goes here');
+					console.log('scroll event object:');
+					console.log(e);
+					console.log('_____________________');
 				}
 			}
 		);
-		setTimeout(function(){
-			that.iscroll.reset('bottomScroller');
-		},5000);
+		  // tests for iscroll abstraction
 		setTimeout(function(){
 			console.log('killing');
 			that.iscroll.kill('bottomScroller');
@@ -117,9 +122,16 @@ var app = {
 				setTimeout(function(){
 					console.log('resetting');
 					that.iscroll.reset('bottomScroller');
+					setTimeout(function(){
+						that.iscroll.scrollTo('bottomScroller', 0, -500);
+						setTimeout(function(){
+							console.log(that.iscroll.get('bottomScroller'));
+						},50);
+					},2500);
 				},2500);
 			},2500);
 		},2500);
+
 	},
     init: function() {
 		this.bottomScroller();
