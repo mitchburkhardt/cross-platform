@@ -12,7 +12,6 @@ var express = require('express'),
 	projectConfig = JSON.parse(fs.readFileSync('./dev/project.json', 'utf-8')),
 	HomeSlide = projectConfig.slides[0][0],
 	devServer;
-	//TODO: fix scss map routes for server
 
 function createRoute(obj) {
     var file, html;

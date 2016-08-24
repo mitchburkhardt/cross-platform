@@ -22,10 +22,14 @@ var app = {
     },
 	iscroll: {
 		scroller: {},
+		chachedConfigs:{},
+		diffs:{},
+		diffCounter:0,
 		spawn: function(config) {
-			console.log('foo');
 			var that = this;
 			var el = $(config.location);
+			var scrollEvent = {x:0,y:0};
+			that.chachedConfigs[config.name] = config;
 			that.scroller[config.name] = new IScroll(config.location+' .inner', {
 				scrollbars: true,
 				mouseWheel: true,
@@ -35,9 +39,19 @@ var app = {
 				probeType: 3,
 				tap: true
 			});
+			that.diffCounter++;
 			that.scroller[config.name].config = config;
-			el.on('tap', config.tap);
-			that.scroller[config.name].on('scroll', config.scroll);
+			el.on('tap', function(e){
+				if(!e.isTrigger){config.tap(e);}
+			});
+			that.scroller[config.name].on('scroll', function(){
+				scrollEvent.x = that.scroller[config.name].x;
+				scrollEvent.y = that.scroller[config.name].y;
+				that.chachedConfigs[config.name].x = scrollEvent.x;
+				that.chachedConfigs[config.name].y = scrollEvent.y;
+
+				config.scroll(scrollEvent);
+			});
 			that.scroller[config.name].off('scroll');
 			that.scroller[config.name].location = config.location;
 			that.scroller[config.name].el = el;
@@ -49,6 +63,10 @@ var app = {
 			that.scroller[name].destroy();
 			$(that.scroller[name].location).attr('style', '');
 			that.scroller[name] = null;
+		},
+		revive: function(name){
+			this.spawn(this.chachedConfigs[name]);
+			this.scroller[name].scrollTo(this.chachedConfigs[name].x, this.chachedConfigs[name].y);
 		},
 		reset: function(name){
 			var that = this;
@@ -66,15 +84,32 @@ var app = {
 				name: 'bottomScroller',
 				location: '#bottomScroller',
 				tap: function(e){
-					console.log('tap');
+					// console.log('_____________________');
+					// console.log('binding for tapping bottom scroller goes here');
+					// console.log('tap event object:');
+					// console.log(e);
+					// console.log('_____________________');
+
 				},
 				scroll: function(e){
-					console.log('scroll');
+					// console.log('_____________________');
+					// console.log('binding for scrolling bottom scroller goes here');
+					// console.log('scroll event object:');
+					// console.log(e);
+					// console.log('_____________________');
 				}
 			}
 		);
+		// setTimeout(function(){
+		// 	that.iscroll.reset('bottomScroller');
+		// },5000);
 		setTimeout(function(){
-			that.iscroll.reset('bottomScroller');
+			console.log('killing');
+			that.iscroll.kill('bottomScroller');
+			setTimeout(function(){
+				console.log('reviving');
+				that.iscroll.revive('bottomScroller');
+			},5000);
 		},5000);
 	},
     init: function() {
