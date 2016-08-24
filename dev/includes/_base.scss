@@ -2,8 +2,16 @@
 body{
 	background-color: #000;
 }
-//TODO: addo support for platform specific style sheets
+//TODO: add support for platform specific style sheets
 #container{
+	*{
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}
 	width: 2048px;
 	height: 1536px;
 	overflow: hidden;

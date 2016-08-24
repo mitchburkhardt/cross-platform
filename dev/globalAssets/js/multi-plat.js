@@ -45,6 +45,7 @@ var app = {
 				if(!e.isTrigger){config.tap(e);}
 			});
 			that.scroller[config.name].on('scroll', function(){
+				if(that.scroller[config.name] === null) return false;
 				scrollEvent.x = that.scroller[config.name].x;
 				scrollEvent.y = that.scroller[config.name].y;
 				that.chachedConfigs[config.name].x = scrollEvent.x;
@@ -59,6 +60,10 @@ var app = {
 		},
 		kill: function(name) {
 			var that = this;
+			var selector = $(that.scroller[name].location);
+			var html = selector.html();
+			selector.html(html);
+			selector.find('.iScrollVerticalScrollbar').remove();
 			that.scroller[name].el.off('tap');
 			that.scroller[name].destroy();
 			$(that.scroller[name].location).attr('style', '');
@@ -100,17 +105,21 @@ var app = {
 				}
 			}
 		);
-		// setTimeout(function(){
-		// 	that.iscroll.reset('bottomScroller');
-		// },5000);
+		setTimeout(function(){
+			that.iscroll.reset('bottomScroller');
+		},5000);
 		setTimeout(function(){
 			console.log('killing');
 			that.iscroll.kill('bottomScroller');
 			setTimeout(function(){
 				console.log('reviving');
 				that.iscroll.revive('bottomScroller');
-			},5000);
-		},5000);
+				setTimeout(function(){
+					console.log('resetting');
+					that.iscroll.reset('bottomScroller');
+				},2500);
+			},2500);
+		},2500);
 	},
     init: function() {
 		this.bottomScroller();
