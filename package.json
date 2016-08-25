@@ -23,6 +23,7 @@
     "grunt-ejs": "0.3.0",
     "grunt-file-creator": "0.1.3",
     "grunt-jsbeautifier": "0.2.12",
+    "grunt-sharp": "^0.16.0",
     "grunt-shell": "1.3.0",
     "grunt-string-replace": "1.2.1",
     "http": "0.0.0",

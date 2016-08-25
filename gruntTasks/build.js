@@ -1,4 +1,9 @@
-// TODO: GENERATE thumb = ./media/images/thumbnails/200x150.jpg for MI touch
+// TODO: generate thumb for MI touch ./media/images/thumbnails/200x150.jpg for MI touch
+// TODO: generate thumb for Veeva
+// TODO: new slide button, fill out form to generate slide in source code
+// TODO: generate slideName.ctl based on form input (Veeva)
+// TODO: Intergrate with auto-upload platform, (hopefully NODEjs)
+// TODO: modify/new form, to guide user to correct file/location
 var devFolder = './dev';
 var compiledFolder = './releases';
 var buildTypes = ['-all', '-native', '-veeva', '-mi'];
@@ -45,307 +50,343 @@ function move_rename(config) {
         }]
     };
     taskArr.push('copy:move_rename-' + mrCounter);
-    taskDefs.clean['move_rename-' + mrCounter] = [config.delete];
-    taskArr.push('clean:move_rename-' + mrCounter);
-}
-function copyFolder(src, dst) {
-	taskDefs.copy[dst] = {
-		files: [{
-			cwd: src,
-			src: '**/*',
-			dest: dst,
-			expand: true
-		}]
-	};
-	taskArr.push('copy:' + dst);
-}
-function zipFolder(dir, zip){
-	var zipName = zip.replace('.zip', '').split('/');
-	zipName = zipName.pop();
-	taskDefs.compress[zip] = {
-		options: {
-			archive: zip
-		},
-		expand: true,
-		cwd: dir,
-		src: ['**/*'],
-		dest: zipName+'/'
-	};
-	taskArr.push('compress:'+zip);
+    if (config.delete) {
+        taskDefs.clean['move_rename-' + mrCounter] = [config.delete];
+        taskArr.push('clean:move_rename-' + mrCounter);
+    }
 }
 
-function defineTasks(){
-	taskDefs.shell = {
-		options: {
-			stderr: false
-		}
-	};
-	taskDefs.clean = {};
-	taskDefs.ejs = {};
-	taskDefs.copy = {};
-	taskDefs.jsbeautifier = {};
-	taskDefs['string-replace'] = {};
-	taskDefs.sass = {};
-	taskDefs.jsbeautifier = {};
-	taskDefs['file-creator'] = {};
-	taskDefs.zip_directories = {};
-	taskDefs.compress = {};
-	taskDefs.cssmin = {};
+function copyFolder(src, dst) {
+    taskDefs.copy[dst] = {
+        files: [{
+            cwd: src,
+            src: '**/*',
+            dest: dst,
+            expand: true
+        }]
+    };
+    taskArr.push('copy:' + dst);
+}
+
+function zipFolder(dir, zip) {
+    var zipName = zip.replace('.zip', '').split('/');
+    zipName = zipName.pop();
+    taskDefs.compress[zip] = {
+        options: {
+            archive: zip
+        },
+        expand: true,
+        cwd: dir,
+        src: ['**/*'],
+        dest: zipName + '/'
+    };
+    taskArr.push('compress:' + zip);
+}
+
+function defineTasks() {
+    taskDefs.shell = {
+        options: {
+            stderr: false
+        }
+    };
+    taskDefs.clean = {};
+    taskDefs.ejs = {};
+    taskDefs.copy = {};
+    taskDefs.jsbeautifier = {};
+    taskDefs['string-replace'] = {};
+    taskDefs.sass = {};
+    taskDefs.jsbeautifier = {};
+    taskDefs['file-creator'] = {};
+    taskDefs.zip_directories = {};
+    taskDefs.compress = {};
+    taskDefs.cssmin = {};
+    taskDefs.sharp = {};
 }
 defineTasks();
 
 function deleteOld() {
-	taskDefs.clean.buffer = [compiledFolder];
-	taskArr.push('clean:buffer');
+    var arr = [];
+    var obj = utils.getFolderContents(compiledFolder);
+    for (prop in obj) {
+        arr.push(compiledFolder + '/' + prop);
+    }
+    taskDefs.clean.buffer = arr;
+    taskArr.push('clean:buffer');
 }
 if (flags.delete) deleteOld();
 
 function showMSG() {
-	taskDefs.shell.showMSG = {
-		command: 'echo Running build task...'
-	};
-	taskArr.push('shell:showMSG');
+    taskDefs.shell.showMSG = {
+        command: 'echo Running build task...'
+    };
+    taskArr.push('shell:showMSG');
 }
 showMSG();
 
 function CompileSASS() {
-	var sassFiles = utils.findFileType(devFolder, 'scss', function(that) {
-		var name = that.split('/')[that.split('/').length - 1];
-		return name.substr(0, 1) !== '_'; // filter function to exclude files starting with "_"
-	});
-	var configObj = {};
-	for (i = 0; i < sassFiles.length; i++) {
-		configObj[sassFiles[i].replace('.scss', '.css')] = sassFiles[i];
-	}
-	taskDefs.sass[0] = {
-		options: {
-			style: 'compressed',
-			sourcemap: 'auto'
-		},
-		files: configObj
-	};
-	taskArr.push('sass:0');
+    var sassFiles = utils.findFileType(devFolder, 'scss', function(that) {
+        var name = that.split('/')[that.split('/').length - 1];
+        return name.substr(0, 1) !== '_'; // filter function to exclude files starting with "_"
+    });
+    var configObj = {};
+    for (i = 0; i < sassFiles.length; i++) {
+        configObj[sassFiles[i].replace('.scss', '.css')] = sassFiles[i];
+    }
+    taskDefs.sass[0] = {
+        options: {
+            style: 'compressed',
+            sourcemap: 'auto'
+        },
+        files: configObj
+    };
+    taskArr.push('sass:0');
 }
 CompileSASS();
 
 function CopySource() {
-	for (i = 0; i < willBuild.length; i++) {
-		taskDefs.copy['source' + i] = {
-			files: [{
-				cwd: devFolder + '/slides',
-				src: '**/*',
-				dest: compiledFolder + '/' + timeStamp + '/' + willBuild[i],
-				expand: true
-			}]
-		};
-		taskArr.push('copy:source' + i);
-	}
+    for (i = 0; i < willBuild.length; i++) {
+        taskDefs.copy['source' + i] = {
+            files: [{
+                cwd: devFolder + '/slides',
+                src: '**/*',
+                dest: compiledFolder + '/' + timeStamp + '/' + willBuild[i],
+                expand: true
+            }]
+        };
+        taskArr.push('copy:source' + i);
+    }
 }
 CopySource();
 
 function CompileEJS() {
-	var srcArr = utils.findFileType(devFolder + '/slides', 'ejs', function() {
-		return true;
-	});
+    var srcArr = utils.findFileType(devFolder + '/slides', 'ejs', function() {
+        return true;
+    });
 
-	function BuildTask(config) {
-		taskDefs.ejs[config.id1 + '-' + config.id2] = {
-			cwd: config.cwd,
-			src: config.src,
-			dest: config.dest,
-			expand: true,
-			ext: '.html',
-			options: {
-				slide: config.slide,
-				fullPage: config.fullPage,
-				buildType: config.buildType,
-				nativeRoot: config.nativeRoot,
-				home: config.home,
-				compiled: true
-			}
-		};
-		taskArr.push('ejs:' + config.id1 + '-' + config.id2);
-	}
-	var configObj;
-	var rel = devFolder + '/slides';
-	var makeFull;
-	var nativeRoot;
-	var FrameIndex;
-	var slideID;
-	for (i = 0; i < srcArr.length; i++) {
-		for (j = 0; j < willBuild.length; j++) {
-			if (srcArr[i] !== './dev/slides/index.ejs' || willBuild[j] === 'native') {
-				FrameIndex = (srcArr[i] === './dev/slides/index.ejs');
-				nativeRoot = (FrameIndex && willBuild[j] === 'native');
-				makeFull = (willBuild[j] !== 'native' || FrameIndex);
-				slideID = srcArr[i].split('/')[3];
-				configObj = {
-					id1: i,
-					id2: j,
-					cwd: rel,
-					src: srcArr[i].replace(rel + '/', ''),
-					dest: compiledFolder.replace('./', '') + '/' + timeStamp + '/' + willBuild[j],
-					fullPage: makeFull,
-					buildType: willBuild[j],
-					nativeRoot: FrameIndex,
-					home: HomeSlide,
-					slide: slideID
-				};
-				BuildTask(configObj);
-			}
-		}
-	}
+    function BuildTask(config) {
+        taskDefs.ejs[config.id1 + '-' + config.id2] = {
+            cwd: config.cwd,
+            src: config.src,
+            dest: config.dest,
+            expand: true,
+            ext: '.html',
+            options: {
+                slide: config.slide,
+                fullPage: config.fullPage,
+                buildType: config.buildType,
+                nativeRoot: config.nativeRoot,
+                home: config.home,
+                compiled: true
+            }
+        };
+        taskArr.push('ejs:' + config.id1 + '-' + config.id2);
+    }
+    var configObj;
+    var rel = devFolder + '/slides';
+    var makeFull;
+    var nativeRoot;
+    var FrameIndex;
+    var slideID;
+    for (i = 0; i < srcArr.length; i++) {
+        for (j = 0; j < willBuild.length; j++) {
+            if (srcArr[i] !== './dev/slides/index.ejs' || willBuild[j] === 'native') {
+                FrameIndex = (srcArr[i] === './dev/slides/index.ejs');
+                nativeRoot = (FrameIndex && willBuild[j] === 'native');
+                makeFull = (willBuild[j] !== 'native' || FrameIndex);
+                slideID = srcArr[i].split('/')[3];
+                configObj = {
+                    id1: i,
+                    id2: j,
+                    cwd: rel,
+                    src: srcArr[i].replace(rel + '/', ''),
+                    dest: compiledFolder.replace('./', '') + '/' + timeStamp + '/' + willBuild[j],
+                    fullPage: makeFull,
+                    buildType: willBuild[j],
+                    nativeRoot: FrameIndex,
+                    home: HomeSlide,
+                    slide: slideID
+                };
+                BuildTask(configObj);
+            }
+        }
+    }
 }
 CompileEJS();
 
 function CopyShared() {
-
-	for (i = 0; i < slides.length; i++) {
-		for (j = 0; j < willBuild.length; j++) {
-			if (willBuild[j] === 'native') {
-				if (!i) {
-					copyFolder(devFolder + '/globalAssets', compiledFolder + '/' + timeStamp + '/' + willBuild[i] + '/globalAssets');
-				}
-			} else {
-				copyFolder(devFolder + '/globalAssets', compiledFolder + '/' + timeStamp + '/' + willBuild[j] + '/' + slides[i] + '/globalAssets');
-			}
-		}
-	}
+    for (i = 0; i < slides.length; i++) {
+        for (j = 0; j < willBuild.length; j++) {
+            if (willBuild[j] === 'native') {
+                if (!i) {
+                    copyFolder(devFolder + '/globalAssets', compiledFolder + '/' + timeStamp + '/' + willBuild[i] + '/globalAssets');
+                }
+            } else {
+                copyFolder(devFolder + '/globalAssets', compiledFolder + '/' + timeStamp + '/' + willBuild[j] + '/' + slides[i] + '/globalAssets');
+            }
+        }
+    }
 }
 CopyShared();
 
-function setPlatform() {
-	for (i = 0; i < willBuild.length; i++) {
-		taskDefs['string-replace']['setPlatform-' + willBuild[i]] = {
-			files: [{
-				expand: true,
-				cwd: compiledFolder + '/' + timeStamp + '/' + willBuild[i],
-				src: ['**/*.html'],
-				dest: compiledFolder + '/' + timeStamp + '/' + willBuild[i]
-			}]
-		};
-		taskArr.push('string-replace:setPlatform-' + willBuild[i]);
-	}
-}
-setPlatform();
-
 function PrettifyHTML() {
-	taskDefs.jsbeautifier.BuiltFiles = {
-		src: [compiledFolder + '/**/*.html'],
-		options: {
-			html: {
-				indentSize: 1,
-				indent_char: '\t',
-				unformatted: ["a", "sub", "sup", "b", "i", "u", "style"],
-			}
-		}
-	};
-	taskArr.push('jsbeautifier:BuiltFiles');
-	taskDefs['string-replace'].cleanUp = {
-		files: [{
-			expand: true,
-			cwd: compiledFolder,
-			src: ['**/*.html'],
-			dest: compiledFolder
-		}],
-		options: {
-			replacements: [
-				{
-					pattern: /(^(?:[\t ]*(?:\r?\n|\r))+)(?=[^>]*(<|$))/gm,
-					replacement: ''
-				}, {
-					pattern: /\r\n\/\*# sourceMappingURL/gm,
-					replacement: '/*# sourceMappingURL'
-				}, {
-					pattern: /\n\/\*# sourceMappingURL/gm,
-					replacement: '/*# sourceMappingURL'
-				}, {
-					pattern: /\n<\/style>/gm,
-					replacement: '</style>'
-				}, {
-					pattern: /\r\n<\/style>/gm,
-					replacement: '</style>'
-				}
-
-			]
-		}
-	};
-	taskArr.push('string-replace:cleanUp');
-
+    taskDefs.jsbeautifier.BuiltFiles = {
+        src: [compiledFolder + '/**/*.html'],
+        options: {
+            html: {
+                indentSize: 1,
+                indent_char: '\t',
+                unformatted: ["a", "sub", "sup", "b", "i", "u", "style"],
+            }
+        }
+    };
+    taskArr.push('jsbeautifier:BuiltFiles');
+    taskDefs['string-replace'].cleanUp = {
+        files: [{
+            expand: true,
+            cwd: compiledFolder,
+            src: ['**/*.html'],
+            dest: compiledFolder
+        }],
+        options: {
+            replacements: [{
+                pattern: /(^(?:[\t ]*(?:\r?\n|\r))+)(?=[^>]*(<|$))/gm,
+                replacement: ''
+            }, {
+                pattern: /\r\n\/\*# sourceMappingURL/gm,
+                replacement: '/*# sourceMappingURL'
+            }, {
+                pattern: /\n\/\*# sourceMappingURL/gm,
+                replacement: '/*# sourceMappingURL'
+            }, {
+                pattern: /\n<\/style>/gm,
+                replacement: '</style>'
+            }, {
+                pattern: /\r\n<\/style>/gm,
+                replacement: '</style>'
+            }]
+        }
+    };
+    taskArr.push('string-replace:cleanUp');
 }
 PrettifyHTML();
 
 function renameVeevaFiles() {
-	var arr = [];
-	var path;
-	var slideName;
-	for (i = 0; i < slides.length; i++) {
-		path = compiledFolder + '/' + timeStamp + '/veeva/' + slides[i] + '/';
-		slideName = path.split('/');
-		slideName = slideName[slideName.length - 2];
-		move_rename({
-			src: path + 'index.html',
-			dest: path + slides[i] + '.html',
-			delete: path + 'index.html'
-		});
-		move_rename({
-			src: path + 'full.jpg',
-			dest: path + slideName + '-full.jpg',
-			delete: path + 'full.jpg'
-		});
-		move_rename({
-			src: path + 'thumb.jpg',
-			dest: path + slideName + '-thumb.jpg',
-			delete: path + 'thumb.jpg'
-		});
-	}
+    var arr = [];
+    var path;
+    var slideName;
+    for (i = 0; i < slides.length; i++) {
+        path = compiledFolder + '/' + timeStamp + '/veeva/' + slides[i] + '/';
+        slideName = path.split('/');
+        slideName = slideName[slideName.length - 2];
+        move_rename({
+            src: path + 'index.html',
+            dest: path + slides[i] + '.html',
+            delete: path + 'index.html'
+        });
+    }
 }
 if (willBuild.indexOf('veeva') > -1) {
-	renameVeevaFiles();
+    renameVeevaFiles();
 }
 
 function buildParametersXml() {
-	function buildTask(slideIndex, endOfFile) {
-		var slideName = projectConfig.slides[slideIndex][0];
-		var guid = projectConfig.slides[slideIndex][1];
-		taskDefs['file-creator']['parameters-' + slideName] = {};
-		taskDefs['file-creator']['parameters-' + slideName][compiledFolder + '/' + timeStamp + '/mi/' + projectConfig.slides[prop][0] + '/Parameters/Parameters.xml'] = function(fs, fd, done) {
-			fs.writeSync(fd, `<Sequence Id="${guid}" xmlns="urn:param-schema">\r\n${endOfFile}`);
-			done();
-		};
-		taskArr.push('file-creator:parameters-' + slideName);
-	}
-	var bottomXML = '\t<Links>';
-	for (prop in projectConfig.slides) {
-		bottomXML += `\r\n\t\t<Link SequenceId="${projectConfig.slides[prop][1]}" />`;
-	}
-	bottomXML += '\r\n\t</Links>\r\n</Sequence>';
-	for (prop in projectConfig.slides) {
-		buildTask(prop, bottomXML);
-	}
+    function buildTask(slideIndex, endOfFile) {
+        var slideName = projectConfig.slides[slideIndex][0];
+        var guid = projectConfig.slides[slideIndex][1];
+        taskDefs['file-creator']['parameters-' + slideName] = {};
+        taskDefs['file-creator']['parameters-' + slideName][compiledFolder + '/' + timeStamp + '/mi/' + projectConfig.slides[prop][0] + '/Parameters/Parameters.xml'] = function(fs, fd, done) {
+            fs.writeSync(fd, `<Sequence Id="${guid}" xmlns="urn:param-schema">\r\n${endOfFile}`);
+            done();
+        };
+        taskArr.push('file-creator:parameters-' + slideName);
+    }
+    var bottomXML = '\t<Links>';
+    for (prop in projectConfig.slides) {
+        bottomXML += `\r\n\t\t<Link SequenceId="${projectConfig.slides[prop][1]}" />`;
+    }
+    bottomXML += '\r\n\t</Links>\r\n</Sequence>';
+    for (prop in projectConfig.slides) {
+        buildTask(prop, bottomXML);
+    }
 }
 if (willBuild.indexOf('mi') > -1) {
-	buildParametersXml();
+    buildParametersXml();
 }
 
+function MakeThumbnails() {
+    var thumbArr = [];
+    for (i = 0; i < willBuild.length; i++) {
+        if (willBuild[i] !== 'native') thumbArr.push(willBuild[i]);
+    }
+    var folder;
+    var veeva = thumbArr.indexOf('veeva') > -1;
+	var mi = thumbArr.indexOf('mi') > -1;
+    if (thumbArr.length) {
+        fs.mkdirSync(compiledFolder + '/' + 'thumbs - ' + timeStamp);
+        if (veeva) {
+            fs.mkdirSync(compiledFolder + '/' + 'full - ' + timeStamp);
+        }
+        for (i = 0; i < slides.length; i++) {
+            fs.mkdirSync(compiledFolder + '/' + 'thumbs - ' + timeStamp + '/' + slides[i]);
+            if (veeva) {
+                fs.mkdirSync(compiledFolder + '/' + 'full - ' + timeStamp + '/' + slides[i]);
+            }
+            taskDefs.sharp['thumb-' + slides[i]] = {
+                files: [{
+                    expand: true,
+                    cwd: `dev/slides/${slides[i]}/`,
+                    src: ['screen.jpg'],
+                    dest: compiledFolder + '/' + 'thumbs - ' + timeStamp + '/' + slides[i]
+                }],
+                options: {
+                    flatten: true,
+                    resize: [200, 150],
+                    rotate: 0
+                }
+            };
+            taskArr.push('sharp:thumb-' + slides[i]);
+            if (veeva) {
+                taskDefs.sharp['full-' + slides[i]] = {
+                    files: [{
+                        expand: true,
+                        cwd: `dev/slides/${slides[i]}/`,
+                        src: ['screen.jpg'],
+                        dest: compiledFolder + '/' + 'full - ' + timeStamp + '/' + slides[i]
+                    }],
+                    options: {
+                        flatten: true,
+                        resize: [1024, 756],
+                        rotate: 0
+                    }
+                };
+                taskArr.push('sharp:full-' + slides[i]);
+            }
+			for (j=0; j<thumbArr.length; j++) {
+				//export images to needed locations, with needed names here...
+			}
+        }
+    }
+}
+MakeThumbnails();
+
 function removeSourceCode() {
-	taskDefs.clean.sourceCode = [compiledFolder + '/**/*.ejs', compiledFolder + '/**/*.scss', compiledFolder + '/**/*.map'];
-	taskArr.push('clean:sourceCode');
+    taskDefs.clean.sourceCode = [compiledFolder + '/**/*.ejs', compiledFolder + '/**/*.scss', compiledFolder + '/**/*.map'];
+    taskArr.push('clean:sourceCode');
 }
 removeSourceCode();
 
 function archiveSource() {
-	zipFolder(devFolder, compiledFolder + '/' + timeStamp + '/__sourceCode.zip');
+    zipFolder(devFolder, compiledFolder + '/' + timeStamp + '/__sourceCode.zip');
 }
 archiveSource();
 
-function zipSlides(){
-	for (i=0; i<slides.length; i++) {
-		for (j=0; j<willBuild.length; j++) {
-			if(willBuild[j] !== 'native'){
-				zipFolder(compiledFolder + '/' + timeStamp+'/'+willBuild[j]+'/'+slides[i], compiledFolder + '/' + timeStamp+'/'+willBuild[j]+'/__zipped/'+slides[i]+'.zip');
-			}
-		}
-	}
+function zipSlides() {
+    for (i = 0; i < slides.length; i++) {
+        for (j = 0; j < willBuild.length; j++) {
+            if (willBuild[j] !== 'native') {
+                zipFolder(compiledFolder + '/' + timeStamp + '/' + willBuild[j] + '/' + slides[i], compiledFolder + '/' + timeStamp + '/' + willBuild[j] + '/__zipped/' + slides[i] + '.zip');
+            }
+        }
+    }
 }
 zipSlides();

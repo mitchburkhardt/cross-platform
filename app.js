@@ -12,7 +12,7 @@ var express = require('express'),
 	projectConfig = JSON.parse(fs.readFileSync('./dev/project.json', 'utf-8')),
 	HomeSlide = projectConfig.slides[0][0],
 	devServer;
-
+// TODO: electron interface
 function createRoute(obj) {
     var file, html;
     app.use(obj.url, express.static(obj.webRoot));
