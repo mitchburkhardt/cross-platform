@@ -13,6 +13,9 @@ var express = require('express'),
 	HomeSlide = projectConfig.slides[0][0],
 	devServer;
 // TODO: electron interface
+	// TODO: new slide button, fill out form to generate slide in source code.
+	// TODO: modify/new form, to guide user to correct file/location.
+	// TODO: buttons to open command prompt, and throw commands so there's no memory needed.
 function createRoute(obj) {
     var file, html;
     app.use(obj.url, express.static(obj.webRoot));

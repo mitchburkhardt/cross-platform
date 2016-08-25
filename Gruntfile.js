@@ -1,3 +1,11 @@
+// TODO: Intergrate with auto-upload platform, (hopefully NODEjs)
+	// TODO: generate slideName.ctl based on form input (for Veeva auto-uploads)
+	// TODO grunt deploy taskDefs
+		// TODO: SVN commit on deploy
+
+
+
+
 require('./AMnodeUtils.js');
 global.fs = require('fs');
 global.path = require('path');

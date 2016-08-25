@@ -1,9 +1,3 @@
-// TODO: generate thumb for MI touch ./media/images/thumbnails/200x150.jpg for MI touch
-// TODO: generate thumb for Veeva
-// TODO: new slide button, fill out form to generate slide in source code
-// TODO: generate slideName.ctl based on form input (Veeva)
-// TODO: Intergrate with auto-upload platform, (hopefully NODEjs)
-// TODO: modify/new form, to guide user to correct file/location
 var devFolder = './dev';
 var compiledFolder = './releases';
 var buildTypes = ['-all', '-native', '-veeva', '-mi'];
@@ -362,7 +356,7 @@ function MakeThumbnails() {
                     }],
                     options: {
                         flatten: true,
-                        resize: [1024, 756],
+                        resize: [1024, 768],
                         rotate: 0
                     }
                 };
@@ -389,6 +383,11 @@ function MakeThumbnails() {
 			}
         }
 		var bufferFolders = [compiledFolder + '/' + 'thumb - ' + timeStamp, compiledFolder + '/' + 'full - ' + timeStamp];
+		for (i=0; i<slides.length; i++) {
+			for (j=0; j<willBuild.length; j++) {
+				bufferFolders.push(`${compiledFolder}/${timeStamp}/${willBuild[j]}/${slides[i]}/screen.jpg`);
+			}
+		}
 		taskDefs.clean.previewIMGS = bufferFolders;
 	    taskArr.push('clean:previewIMGS');
     }
@@ -397,11 +396,6 @@ MakeThumbnails();
 
 function removeSourceCode() {
 	var arr = [compiledFolder + '/**/*.ejs', compiledFolder + '/**/*.scss', compiledFolder + '/**/*.map'];
-	for (i=0; i<slides.length; i++) {
-		for (j=0; j<willBuild.length; j++) {
-			arr.push(`${compiledFolder}/${timeStamp}/${willBuild[j]}/${slides[i]}/screen.jpg`);
-		}
-	}
     taskDefs.clean.sourceCode = arr;
     taskArr.push('clean:sourceCode');
 }
