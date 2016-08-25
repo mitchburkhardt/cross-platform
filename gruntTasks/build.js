@@ -40,6 +40,14 @@ for (prop in flags) {
 var mrCounter = 0;
 
 function move_rename(config) {
+	console.log('___________________');
+	console.log('___________________');
+	console.log('___________________');
+	console.log(config);
+	console.log('___________________');
+	console.log('___________________');
+	console.log('___________________');
+	console.log('___________________');
     mrCounter++;
     taskDefs.copy['move_rename-' + mrCounter] = {
         files: [{
@@ -189,8 +197,8 @@ function CompileEJS() {
     var slideID;
     for (i = 0; i < srcArr.length; i++) {
         for (j = 0; j < willBuild.length; j++) {
-            if (srcArr[i] !== './dev/slides/index.ejs' || willBuild[j] === 'native') {
-                FrameIndex = (srcArr[i] === './dev/slides/index.ejs');
+            if (srcArr[i] !== `${devFolder}/slides/index.ejs` || willBuild[j] === 'native') {
+                FrameIndex = (srcArr[i] === `${devFolder}/slides/index.ejs`);
                 nativeRoot = (FrameIndex && willBuild[j] === 'native');
                 makeFull = (willBuild[j] !== 'native' || FrameIndex);
                 slideID = srcArr[i].split('/')[3];
@@ -314,29 +322,28 @@ if (willBuild.indexOf('mi') > -1) {
 }
 
 function MakeThumbnails() {
-    var thumbArr = [];
+    var platforms = [];
     for (i = 0; i < willBuild.length; i++) {
-        if (willBuild[i] !== 'native') thumbArr.push(willBuild[i]);
+        if (willBuild[i] !== 'native') platforms.push(willBuild[i]);
     }
     var folder;
-    var veeva = thumbArr.indexOf('veeva') > -1;
-	var mi = thumbArr.indexOf('mi') > -1;
-    if (thumbArr.length) {
-        fs.mkdirSync(compiledFolder + '/' + 'thumbs - ' + timeStamp);
-        if (veeva) {
-            fs.mkdirSync(compiledFolder + '/' + 'full - ' + timeStamp);
-        }
+    var veeva = platforms.indexOf('veeva') > -1;
+	var mi = platforms.indexOf('mi') > -1;
+	var obj;
+    if (platforms.length) {
+        fs.mkdirSync(compiledFolder + '/' + 'thumb - ' + timeStamp);
+        if (veeva) fs.mkdirSync(compiledFolder + '/' + 'full - ' + timeStamp);
         for (i = 0; i < slides.length; i++) {
-            fs.mkdirSync(compiledFolder + '/' + 'thumbs - ' + timeStamp + '/' + slides[i]);
+            fs.mkdirSync(compiledFolder + '/' + 'thumb - ' + timeStamp + '/' + slides[i]);
             if (veeva) {
                 fs.mkdirSync(compiledFolder + '/' + 'full - ' + timeStamp + '/' + slides[i]);
             }
             taskDefs.sharp['thumb-' + slides[i]] = {
                 files: [{
                     expand: true,
-                    cwd: `dev/slides/${slides[i]}/`,
+                    cwd: `${devFolder}/slides/${slides[i]}/`,
                     src: ['screen.jpg'],
-                    dest: compiledFolder + '/' + 'thumbs - ' + timeStamp + '/' + slides[i]
+                    dest: compiledFolder + '/' + 'thumb - ' + timeStamp + '/' + slides[i]
                 }],
                 options: {
                     flatten: true,
@@ -349,7 +356,7 @@ function MakeThumbnails() {
                 taskDefs.sharp['full-' + slides[i]] = {
                     files: [{
                         expand: true,
-                        cwd: `dev/slides/${slides[i]}/`,
+                        cwd: `${devFolder}/slides/${slides[i]}/`,
                         src: ['screen.jpg'],
                         dest: compiledFolder + '/' + 'full - ' + timeStamp + '/' + slides[i]
                     }],
@@ -361,16 +368,41 @@ function MakeThumbnails() {
                 };
                 taskArr.push('sharp:full-' + slides[i]);
             }
-			for (j=0; j<thumbArr.length; j++) {
-				//export images to needed locations, with needed names here...
+			if(veeva){
+				move_rename({
+		            src: compiledFolder + '/' + 'thumb - ' + timeStamp + '/' + 'home' +'/screen.jpg',
+		            dest: `${compiledFolder}/${timeStamp}/veeva/${slides[i]}/${slides[i]}-thumb.jpg`,
+		            delete: false
+		        });
+				move_rename({
+		            src: compiledFolder + '/' + 'full - ' + timeStamp + '/' + 'home' +'/screen.jpg',
+		            dest: `${compiledFolder}/${timeStamp}/veeva/${slides[i]}/${slides[i]}-full.jpg`,
+		            delete: false
+		        });
+			}
+			if(mi){
+				move_rename({
+		            src: compiledFolder + '/' + 'thumb - ' + timeStamp + '/' + 'home' +'/screen.jpg',
+		            dest: `${compiledFolder}/${timeStamp}/mi/${slides[i]}/media/images/thumbnails/200x150.jpg`,
+		            delete: false
+		        });
 			}
         }
+		var bufferFolders = [compiledFolder + '/' + 'thumb - ' + timeStamp, compiledFolder + '/' + 'full - ' + timeStamp];
+		taskDefs.clean.previewIMGS = bufferFolders;
+	    taskArr.push('clean:previewIMGS');
     }
 }
 MakeThumbnails();
 
 function removeSourceCode() {
-    taskDefs.clean.sourceCode = [compiledFolder + '/**/*.ejs', compiledFolder + '/**/*.scss', compiledFolder + '/**/*.map'];
+	var arr = [compiledFolder + '/**/*.ejs', compiledFolder + '/**/*.scss', compiledFolder + '/**/*.map'];
+	for (i=0; i<slides.length; i++) {
+		for (j=0; j<willBuild.length; j++) {
+			arr.push(`${compiledFolder}/${timeStamp}/${willBuild[j]}/${slides[i]}/screen.jpg`);
+		}
+	}
+    taskDefs.clean.sourceCode = arr;
     taskArr.push('clean:sourceCode');
 }
 removeSourceCode();
