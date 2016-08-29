@@ -2,6 +2,7 @@
 body{
 	background-color: #000;
 }
+
 //TODO: add support for platform specific style sheets
 #container{
 	*{
@@ -26,6 +27,7 @@ body{
 	.view{
 		@include fillParent();
 		display: none;
+		height: 1536px;
 		&.active{
 			display: block;
 		}

@@ -112,28 +112,36 @@ var app = {
 			}
 		);
 		  // tests for iscroll abstraction
-		setTimeout(function(){
-			console.log('killing');
-			that.iscroll.kill('bottomScroller');
-			setTimeout(function(){
-				console.log('reviving');
-				that.iscroll.revive('bottomScroller');
-				setTimeout(function(){
-					console.log('resetting');
-					that.iscroll.reset('bottomScroller');
-					setTimeout(function(){
-						that.iscroll.scrollTo('bottomScroller', 0, -500);
-						setTimeout(function(){
-							console.log(that.iscroll.get('bottomScroller'));
-						},50);
-					},2500);
-				},2500);
-			},2500);
-		},2500);
+		// setTimeout(function(){
+		// 	console.log('killing');
+		// 	that.iscroll.kill('bottomScroller');
+		// 	setTimeout(function(){
+		// 		console.log('reviving');
+		// 		that.iscroll.revive('bottomScroller');
+		// 		setTimeout(function(){
+		// 			console.log('resetting');
+		// 			that.iscroll.reset('bottomScroller');
+		// 			setTimeout(function(){
+		// 				that.iscroll.scrollTo('bottomScroller', 0, -500);
+		// 				setTimeout(function(){
+		// 					console.log(that.iscroll.get('bottomScroller'));
+		// 				},50);
+		// 			},2500);
+		// 		},2500);
+		// 	},2500);
+		// },2500);
 
 	},
     init: function() {
+		document.addEventListener('touchmove', function (e) { e.preventDefault(); });
+		document.addEventListener('touchstart', function (e) { e.preventDefault(); });
+		document.addEventListener('touchcancel', function (e) { e.preventDefault(); });
+		document.addEventListener('touchend', function (e) { e.preventDefault(); });
 		this.bottomScroller();
 	}
 };
 app.init();
+
+$('#container > div.view').on('swipeUp swipeDown swipeLeft swipeRight', function(e){
+	$('#swipeOutput').html(e.type);
+});
