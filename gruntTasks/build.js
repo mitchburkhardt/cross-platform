@@ -178,7 +178,9 @@ function CompileEJS() {
                 buildType: config.buildType,
                 nativeRoot: config.nativeRoot,
                 home: config.home,
-                compiled: true
+                compiled: true,
+				slides: slides,
+				bottomScrollerHeight: projectConfig.bottomScrollerHeight
             }
         };
         taskArr.push('ejs:' + config.id1 + '-' + config.id2);

@@ -17,8 +17,22 @@
 			style = include(`../slides/${slide}/complete.css`, locals);
 			style = style.replace(/_#/g, './').replace(/..\/..\/globalAssets/g, '.\/globalAssets').replace(/.\/.\//g, '.\/').replace(/.\/\//g, '.\/');
 		}
+		var buffer = '';
+		for (i=0; i<locals.slides.length; i++) {
+			for (j=0; j<20; j++) {
+				buffer += `#${locals.slides[i]}Slide[activeChild="${j+1}"] .childSlide:first-of-type{
+					margin-top: -${j * ( 1536 - (locals.bottomScrollerHeight.replace('px','')))}px;
+				}`;
+				console.log(`-${j * ( 1536 - (locals.bottomScrollerHeight.replace('px','')))}px`);
+
+			}
+		}
+		// console.log(buffer);
+		style+=buffer;
+
 	%>
 	<%- `<style>${style}</style>` %>
+
 
 
 </head>

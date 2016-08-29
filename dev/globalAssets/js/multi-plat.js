@@ -143,5 +143,5 @@ var app = {
 app.init();
 
 $('#container > div.view').on('swipeUp swipeDown swipeLeft swipeRight', function(e){
-	$('#swipeOutput').html(e.type);
+	console.log(e.type);
 });

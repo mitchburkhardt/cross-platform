@@ -12,6 +12,7 @@ var express = require('express'),
 	projectConfig = JSON.parse(fs.readFileSync('./dev/project.json', 'utf-8')),
 	HomeSlide = projectConfig.slides[0][0],
 	devServer;
+	console.log(projectConfig);
 // TODO: electron interface
 	// TODO: new slide button, fill out form to generate slide in source code.
 	// TODO: modify/new form, to guide user to correct file/location.
@@ -52,13 +53,19 @@ function getDirectories(srcpath) {
 }
 
 function spinServers(){
-	if(dirExists('dev/slides')){
+	fs.writeFile("./dev/includes/_core/_bottomScrollerHeight.scss", `$bottomscrollerHeight: ${projectConfig.bottomScrollerHeight};`, function(err) {
+    if(err) {
+        return console.log(err);
+    }
+
+    if(dirExists('dev/slides')){
 		app.set('view engine', 'ejs');
 		app.set('views','./dev');
 		var slides = getDirectories('dev/slides');
-		slides.forEach(function(i){
-		    app.use('/'+i, express.static(__dirname + '/dev/slides/'+i));
-		});
+		console.log(slides);
+		// slides.forEach(function(i){
+		//     app.use('/'+i, express.static(__dirname + '/dev/slides/'+i));
+		// });
 		ejs.delimiter = '%';
 
 		createRoute({
@@ -72,7 +79,9 @@ function spinServers(){
 				buildType: 'native',
 				filename: 'dev/slides/index.ejs',
 				nativeRoot: true,
-				compiled: false
+				compiled: false,
+				slides: slides,
+				bottomScrollerHeight: projectConfig.bottomScrollerHeight
 		    }
 		});
 		createRoute({
@@ -133,5 +142,7 @@ function spinServers(){
 	else{
 		// console.log('source code has not been compiled.  Run "grunt build"');
 	}
+});
+
 }
 spinServers();

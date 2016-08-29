@@ -12,5 +12,17 @@
 		top = top.replace(/_#..\/..\/globalAssets/g, '.\/globalAssets').replace(/_#/g, `./${locals.slide}/`).replace('sourceMappingURL=', `sourceMappingURL=${locals.slide}/`);
 	}
 	console.log(locals);
+	top +=`<div class="ParentSlide" id="${locals.slide}Slide" activeChild="1">
+		<script type="text/javascript">
+			(function(){
+				var goToChild;
+				var storedChild = localStorage.goToChild;
+				if(storedChild) goToChild = storedChild;
+				else goToChild = 1;
+				document.getElementById('${locals.slide}Slide').setAttribute("activeChild", goToChild);
+				localStorage.goToChild = 1;
+			})();
+		</script>
+	`;
 %>
 <%- top %>

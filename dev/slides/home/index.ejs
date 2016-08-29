@@ -1,9 +1,26 @@
 <% include ../../includes/open %>
 
-	<div id="thingy"></div>
-	<div id="swipeOutput"></div>
-	<div id="thingy" class="stuff"></div>
-	<%- JSON.stringify(locals) %>
+	
+
+		<div class="childSlide">
+			First Child
+			<div id="thingy"></div>
+			<div id="thingy" class="stuff"></div>
+			<%- JSON.stringify(locals) %>
+		</div>
+		<div class="childSlide">
+			Second Child
+			<div id="thingy"></div>
+			<div id="thingy" class="stuff"></div>
+			<%- JSON.stringify(locals) %>
+		</div>
+		<div class="childSlide">
+			Third Child
+			<div id="thingy"></div>
+			<div id="thingy" class="stuff"></div>
+			<%- JSON.stringify(locals) %>
+		</div>
+		<button style="position: absolute; right: 120px; top: 120px; font-size: 100px;">refresh</button>
 
 
 <% include ../../includes/close %>

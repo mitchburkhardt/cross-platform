@@ -83,10 +83,73 @@ body {
   height: 100%;
   width: 100%;
   display: none;
-  height: 1536px;
+  height: 1136px;
 }
 #container .view.active {
   display: block;
+}
+#container .view .ParentSlide[activeChild="1"] .childSlide:first-child {
+  margin-top: 0px;
+}
+#container .view .ParentSlide[activeChild="2"] .childSlide:first-child {
+  margin-top: -1136px;
+}
+#container .view .ParentSlide[activeChild="3"] .childSlide:first-child {
+  margin-top: -2272px;
+}
+#container .view .ParentSlide[activeChild="4"] .childSlide:first-child {
+  margin-top: -3408px;
+}
+#container .view .ParentSlide[activeChild="5"] .childSlide:first-child {
+  margin-top: -4544px;
+}
+#container .view .ParentSlide[activeChild="6"] .childSlide:first-child {
+  margin-top: -5680px;
+}
+#container .view .ParentSlide[activeChild="7"] .childSlide:first-child {
+  margin-top: -6816px;
+}
+#container .view .ParentSlide[activeChild="8"] .childSlide:first-child {
+  margin-top: -7952px;
+}
+#container .view .ParentSlide[activeChild="9"] .childSlide:first-child {
+  margin-top: -9088px;
+}
+#container .view .ParentSlide[activeChild="10"] .childSlide:first-child {
+  margin-top: -10224px;
+}
+#container .view .ParentSlide[activeChild="11"] .childSlide:first-child {
+  margin-top: -11360px;
+}
+#container .view .ParentSlide[activeChild="12"] .childSlide:first-child {
+  margin-top: -12496px;
+}
+#container .view .ParentSlide[activeChild="13"] .childSlide:first-child {
+  margin-top: -13632px;
+}
+#container .view .ParentSlide[activeChild="14"] .childSlide:first-child {
+  margin-top: -14768px;
+}
+#container .view .ParentSlide[activeChild="15"] .childSlide:first-child {
+  margin-top: -15904px;
+}
+#container .view .ParentSlide[activeChild="16"] .childSlide:first-child {
+  margin-top: -17040px;
+}
+#container .view .ParentSlide[activeChild="17"] .childSlide:first-child {
+  margin-top: -18176px;
+}
+#container .view .ParentSlide[activeChild="18"] .childSlide:first-child {
+  margin-top: -19312px;
+}
+#container .view .ParentSlide[activeChild="19"] .childSlide:first-child {
+  margin-top: -20448px;
+}
+#container .view .ParentSlide[activeChild="20"] .childSlide:first-child {
+  margin-top: -21584px;
+}
+#container .view .ParentSlide .childSlide {
+  height: 1136px;
 }
 
 /*# sourceMappingURL=outer.css.map */

@@ -1,11 +1,10 @@
 @import './vars';
-body{
+body {
 	background-color: #000;
 }
-
 //TODO: add support for platform specific style sheets
-#container{
-	*{
+#container {
+	* {
 		-webkit-touch-callout: none;
 		-webkit-user-select: none;
 		-khtml-user-select: none;
@@ -19,17 +18,30 @@ body{
 	position: relative;
 	background-color: #fff;
 	@import './bottomScroller.scss';
-	.scrollContainer{
-		.inner{
+	.scrollContainer {
+		.inner {
 			overflow: hidden;
 		}
 	}
-	.view{
+	.view {
 		@include fillParent();
 		display: none;
-		height: 1536px;
-		&.active{
+		height: 1536px - $bottomscrollerHeight;
+		&.active {
 			display: block;
+		}
+		@for $i from 1 through 20 {
+			.ParentSlide[activeChild="#{$i}"] {
+				.childSlide:first-child {
+					margin-top: #{(1536px - $bottomscrollerHeight) * (-1 * ($i - 1))};
+				}
+			}
+		}
+		.ParentSlide {
+			.childSlide {
+				height: 1536px - $bottomscrollerHeight;
+			}
 		}
 	}
 }
+// TODO: generate active child slide tag for each parent slide
