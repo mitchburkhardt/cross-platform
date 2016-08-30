@@ -235,3 +235,6 @@ function lazyTests() {
     // },2500);
 }
 lazyTests();
+
+//TODO: trackChild functions
+//TODO: slide lvl buttons for child slides

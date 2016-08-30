@@ -15,7 +15,7 @@ global.taskDefs = {};
 global.taskArr = [];
 var taskAtHand = null;
 global.projectConfig = JSON.parse(fs.readFileSync('./dev/project.json', 'utf-8')); //project specific
-global.HomeSlide = projectConfig.slides[0][0]; //project specific
+global.HomeSlide = projectConfig.slides[0].name; //project specific
 var params = process.argv;
 var a;
 for (i=0; i<tasks.length; i++) {

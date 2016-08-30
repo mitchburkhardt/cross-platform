@@ -298,7 +298,7 @@ function buildParametersXml() {
         var slideName = projectConfig.slides[slideIndex][0];
         var guid = projectConfig.slides[slideIndex][1];
         taskDefs['file-creator']['parameters-' + slideName] = {};
-        taskDefs['file-creator']['parameters-' + slideName][compiledFolder + '/' + timeStamp + '/mi/' + projectConfig.slides[prop][0] + '/Parameters/Parameters.xml'] = function(fs, fd, done) {
+        taskDefs['file-creator']['parameters-' + slideName][compiledFolder + '/' + timeStamp + '/mi/' + projectConfig.slides[prop].name + '/Parameters/Parameters.xml'] = function(fs, fd, done) {
             fs.writeSync(fd, `<Sequence Id="${guid}" xmlns="urn:param-schema">\r\n${endOfFile}`);
             done();
         };

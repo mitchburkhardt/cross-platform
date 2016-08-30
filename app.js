@@ -10,10 +10,10 @@ var express = require('express'),
 	watch = require('node-watch'),
 	watcher = false,
 	projectConfig = JSON.parse(fs.readFileSync('./dev/project.json', 'utf-8')),
-	HomeSlide = projectConfig.slides[0][0],
+	HomeSlide = projectConfig.slides[0].name,
 	devServer;
 	console.log(projectConfig);
-// TODO: electron interface
+	// TODO: electron interface
 	// TODO: new slide button, fill out form to generate slide in source code.
 	// TODO: modify/new form, to guide user to correct file/location.
 	// TODO: buttons to open command prompt, and throw commands so there's no memory needed.
