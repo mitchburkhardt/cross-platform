@@ -24,9 +24,22 @@
 			}
 		`;
 	}
+	var slideIndex;
+	for (var prop in locals.projectConfig.slides) {
+		if(locals.projectConfig.slides[prop].name === locals.slide){
+			slideIndex = prop;
+			break;
+		}
+	}
+	console.log(slideIndex);
 	top += '<style>'+buffer+'</style>';
 	top +=`<div class="ParentSlide" id="${locals.slide}Slide" activeChild="1">
 		<script type="text/javascript">
+			var projectConfig = ${JSON.stringify(locals.projectConfig)};
+			var slideConfig = projectConfig.slides['${slideIndex}'];
+			slideConfig.index = ${slideIndex};
+			console.log(projectConfig);
+			console.log(slideConfig);
 			(function(){
 				var goToChild;
 				var storedChild = localStorage.goToChild;

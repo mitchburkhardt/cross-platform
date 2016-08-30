@@ -12,7 +12,6 @@ var express = require('express'),
 	projectConfig = JSON.parse(fs.readFileSync('./dev/project.json', 'utf-8')),
 	HomeSlide = projectConfig.slides[0].name,
 	devServer;
-	console.log(projectConfig);
 	// TODO: electron interface
 	// TODO: new slide button, fill out form to generate slide in source code.
 	// TODO: modify/new form, to guide user to correct file/location.
@@ -81,7 +80,8 @@ function spinServers(){
 				nativeRoot: true,
 				compiled: false,
 				slides: slides,
-				bottomScrollerHeight: projectConfig.bottomScrollerHeight
+				bottomScrollerHeight: projectConfig.bottomScrollerHeight,
+				projectConfig: projectConfig
 		    }
 		});
 		createRoute({
