@@ -11,7 +11,20 @@
 		top = `<style>${include('./content.css', locals)}</style>`;
 		top = top.replace(/_#..\/..\/globalAssets/g, '.\/globalAssets').replace(/_#/g, `./${locals.slide}/`).replace('sourceMappingURL=', `sourceMappingURL=${locals.slide}/`);
 	}
-	console.log(locals);
+	var buffer = '';
+	var offset;
+	var matrix;
+	for (i=0; i<20; i++) {
+		offset = (1536 - locals.bottomScrollerHeight.replace('px','')) * (i*-1);
+		matrix = `matrix(1,0,0,1,0,${offset})`;
+		buffer += `
+			#${locals.slide}Slide[activeChild="${i+1}"]{
+				transform: ${matrix};
+				-webkit-transform: ${matrix};
+			}
+		`;
+	}
+	top += '<style>'+buffer+'</style>';
 	top +=`<div class="ParentSlide" id="${locals.slide}Slide" activeChild="1">
 		<script type="text/javascript">
 			(function(){
@@ -21,8 +34,17 @@
 				else goToChild = 1;
 				document.getElementById('${locals.slide}Slide').setAttribute("activeChild", goToChild);
 				localStorage.goToChild = 1;
+				var styleTag = document.createElement('style');
+				styleTag.type = 'text/css';
+				styleTag.appendChild(document.createTextNode('#container .view .childSlide:not(.viz) > * {display: none;}'));
+				setTimeout(function(){
+					document.getElementsByClassName('childSlide')[0].className = 'childSlide viz';
+					document.getElementsByTagName('head')[0].appendChild(styleTag);
+				},100);
 			})();
+
 		</script>
 	`;
+
 %>
 <%- top %>

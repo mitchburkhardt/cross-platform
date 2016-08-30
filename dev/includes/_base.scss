@@ -2,12 +2,11 @@
 body {
 	background-color: #000;
 }
-//TODO: add support for platform specific style sheets
+/*TODO: add support for platform specific style sheets*/
 #container {
 	* {
 		-webkit-touch-callout: none;
 		-webkit-user-select: none;
-		-khtml-user-select: none;
 		-moz-user-select: none;
 		-ms-user-select: none;
 		user-select: none;
@@ -26,22 +25,19 @@ body {
 	.view {
 		@include fillParent();
 		display: none;
-		height: 1536px - $bottomscrollerHeight;
+		.childSlide {
+			height: 1536px - $bottomscrollerHeight;
+		}
 		&.active {
 			display: block;
 		}
-		@for $i from 1 through 20 {
-			.ParentSlide[activeChild="#{$i}"] {
-				.childSlide:first-child {
-					margin-top: #{(1536px - $bottomscrollerHeight) * (-1 * ($i - 1))};
-				}
-			}
-		}
-		.ParentSlide {
-			.childSlide {
-				height: 1536px - $bottomscrollerHeight;
-			}
-		}
 	}
 }
-// TODO: generate active child slide tag for each parent slide
+.gpu {
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+	-webkit-perspective: 1000;
+	perspective: 1000;
+	-webkit-transform: translate3d(0, 0, 0);
+	transform: translate3d(0, 0, 0);
+}
