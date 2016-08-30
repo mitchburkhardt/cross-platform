@@ -34,14 +34,6 @@ for (prop in flags) {
 var mrCounter = 0;
 
 function move_rename(config) {
-	console.log('___________________');
-	console.log('___________________');
-	console.log('___________________');
-	console.log(config);
-	console.log('___________________');
-	console.log('___________________');
-	console.log('___________________');
-	console.log('___________________');
     mrCounter++;
     taskDefs.copy['move_rename-' + mrCounter] = {
         files: [{
@@ -295,9 +287,11 @@ if (willBuild.indexOf('veeva') > -1) {
 
 function buildParametersXml() {
     function buildTask(slideIndex, endOfFile) {
-        var slideName = projectConfig.slides[slideIndex][0];
-        var guid = projectConfig.slides[slideIndex][1];
+        var slideName = projectConfig.slides[slideIndex].name;
+        var guid = projectConfig.slides[slideIndex]['GUID'];
+		console.log(guid);
         taskDefs['file-creator']['parameters-' + slideName] = {};
+		// console.log(compiledFolder + '/' + timeStamp + '/mi/' + slideName + '/Parameters/Parameters.xml');
         taskDefs['file-creator']['parameters-' + slideName][compiledFolder + '/' + timeStamp + '/mi/' + projectConfig.slides[prop].name + '/Parameters/Parameters.xml'] = function(fs, fd, done) {
             fs.writeSync(fd, `<Sequence Id="${guid}" xmlns="urn:param-schema">\r\n${endOfFile}`);
             done();
@@ -306,7 +300,7 @@ function buildParametersXml() {
     }
     var bottomXML = '\t<Links>';
     for (prop in projectConfig.slides) {
-        bottomXML += `\r\n\t\t<Link SequenceId="${projectConfig.slides[prop][1]}" />`;
+        bottomXML += `\r\n\t\t<Link SequenceId="${projectConfig.slides[prop].GUID}" />`;
     }
     bottomXML += '\r\n\t</Links>\r\n</Sequence>';
     for (prop in projectConfig.slides) {
