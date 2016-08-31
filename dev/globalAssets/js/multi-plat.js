@@ -12,7 +12,13 @@ var app = {
         loadParent: function(url, direction) {
             // platform specific definitions are defined in the "platform-specifics" folder
         },
-		trackChild: function(url, direction) {
+		nextParent: function(){
+
+		},
+		prevParent: function(){
+
+		},
+		trackChild: function(GUID, type) {
             // platform specific definitions are defined in the "platform-specifics" folder
         },
         loadChild: function(config) {
@@ -79,6 +85,38 @@ var app = {
 			if(config.number < 2) type = 'parent';
 			that.trackChild(that.var.GUIDs[config.number-1], type);
         },
+		horizontalSwipes: function(){
+			var that = this;
+			var currentSlide = slideConfig.name;
+			var currentlSlideIndex;
+			for (var prop in projectConfig.slides) {
+				if(projectConfig.slides[prop].name === currentSlide){
+					currentlSlideIndex = prop * 1;
+					break;
+				}
+			}
+			var nextSlide = null, previousSlide = null;
+			if(projectConfig.slides[currentlSlideIndex-1]){
+				previousSlide = projectConfig.slides[currentlSlideIndex-1].name;
+			}
+			if(projectConfig.slides[currentlSlideIndex+1]){
+				nextSlide = projectConfig.slides[currentlSlideIndex+1].name;
+			}
+			if(nextSlide !== null){
+				$('#container > div.view').on('swipeLeft', function(e) {
+	                that.loadParent(nextSlide, 'right');
+	            });
+			}
+			if(previousSlide !== null){
+				$('#container > div.view').on('swipeRight', function(e) {
+					console.log('right');
+	                that.loadParent(previousSlide, 'left');
+	            });
+			}
+		},
+		afterPlatformLoad: function(){
+			this.horizontalSwipes();
+		},
         verticalSwipes: function() {
             var activeParent,
             	CurrentSlide,
@@ -104,7 +142,6 @@ var app = {
                 }
             });
 			this.verticalSwipes();
-			console.log(this.var.GUIDs);
         }
     },
     iscroll: {
@@ -200,21 +237,14 @@ var app = {
         });
     },
     init: function() {
-        document.addEventListener('touchmove', function(e) {
-            e.preventDefault();
-        });
-        document.addEventListener('touchstart', function(e) {
-            e.preventDefault();
-        });
-        document.addEventListener('touchcancel', function(e) {
-            e.preventDefault();
-        });
-        document.addEventListener('touchend', function(e) {
-            e.preventDefault();
-        });
-        this.bottomScroller();
+		if(projectConfig.bottomScrollerHeight){
+			if(parseInt(projectConfig.bottomScrollerHeight)) this.bottomScroller();
+		}
 		this.nav.init();
-    }
+    },
+	afterPlatformLoad: function(){
+		this.nav.afterPlatformLoad();
+	}
 };
 app.init();
 

@@ -7,7 +7,7 @@
 6 info start cross-platform-idetail@
 7 verbose unsafe-perm in lifecycle true
 8 info cross-platform-idetail@ Failed to exec start script
-9 verbose stack Error: cross-platform-idetail@ start: `concurrently --kill-others 'nodemon --watch ./ --ignore './releases/**' -e js,json,xml,css,txt app.js' 'grunt watchSass'`
+9 verbose stack Error: cross-platform-idetail@ start: `concurrently --kill-others 'nodemon --watch ./ --ignore './releases/**' -e json,xml,txt,html app.js' 'grunt watchSass'`
 9 verbose stack Exit status 1
 9 verbose stack     at EventEmitter.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/lifecycle.js:217:16)
 9 verbose stack     at emitTwo (events.js:87:13)
@@ -24,13 +24,13 @@
 14 error node v4.4.4
 15 error npm  v2.15.1
 16 error code ELIFECYCLE
-17 error cross-platform-idetail@ start: `concurrently --kill-others 'nodemon --watch ./ --ignore './releases/**' -e js,json,xml,css,txt app.js' 'grunt watchSass'`
+17 error cross-platform-idetail@ start: `concurrently --kill-others 'nodemon --watch ./ --ignore './releases/**' -e json,xml,txt,html app.js' 'grunt watchSass'`
 17 error Exit status 1
-18 error Failed at the cross-platform-idetail@ start script 'concurrently --kill-others 'nodemon --watch ./ --ignore './releases/**' -e js,json,xml,css,txt app.js' 'grunt watchSass''.
+18 error Failed at the cross-platform-idetail@ start script 'concurrently --kill-others 'nodemon --watch ./ --ignore './releases/**' -e json,xml,txt,html app.js' 'grunt watchSass''.
 18 error This is most likely a problem with the cross-platform-idetail package,
 18 error not with npm itself.
 18 error Tell the author that this fails on your system:
-18 error     concurrently --kill-others 'nodemon --watch ./ --ignore './releases/**' -e js,json,xml,css,txt app.js' 'grunt watchSass'
+18 error     concurrently --kill-others 'nodemon --watch ./ --ignore './releases/**' -e json,xml,txt,html app.js' 'grunt watchSass'
 18 error You can get information on how to open an issue for this project with:
 18 error     npm bugs cross-platform-idetail
 18 error Or if that isn't available, you can get their info via:

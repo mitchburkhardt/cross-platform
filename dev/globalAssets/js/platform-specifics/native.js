@@ -1,27 +1,19 @@
 app.pageScripts = {};
-app.nav.loadParent = function(url, direction) {
-	// TODO: load parent function for Native
-};
-
-
-
-
-app.nav.loadParent = function(url, direction) {
-    // TODO: load parent function for MI touch
-};
-app.nav.SaveObject = function(clmDescription, clmAnswer, clmCallback) {
-    var url = window.location.pathname,
-        filename = url.substring(url.lastIndexOf('/') + 1),
-        clmTrackingID = filename.replace(".html", "");
-    var myCallClickStream = {};
-    myCallClickStream.Track_Element_Id_vod__c = clmTrackingID;
-    myCallClickStream.Track_Element_Type_vod__c = clmDescription;
-    myCallClickStream.Selected_Items_vod__c = clmAnswer;
-    myCallClickStream.Track_Element_Description_vod__c = clmAnswer;
-    // var myJSONText = JSON.stringify( myCallClickStream );
-    com.veeva.clm.createRecord(Call_Clickstream_vod__c, myCallClickStream, clmCallback);
+app.nav.loadParent = function(slideName, direction) {
+	console.log('dummy function to navigate to parent slide:  -  ',slideName,direction);
+    // TODO: load parent function for Native
 };
 app.nav.trackChild = function(GUID, type) {
     // TODO: track child function for Veeva touch
-	console.log(GUID, type);
+    console.log('dummy tracking function:  -  ',GUID, '  -  ', type);
+    return false;
+};
+app.platform = {
+    init: function() {
+        var type = 'parent';
+        var current = $('.view.active .ParentSlide').attr('activechild') * 1;
+        if (current > 1) type = 'child';
+        app.nav.trackChild(app.nav.var.GUIDs[current - 1], type);
+		app.afterPlatformLoad();
+    }
 };

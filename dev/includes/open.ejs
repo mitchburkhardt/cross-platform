@@ -13,9 +13,14 @@
 	}
 	var buffer = '';
 	var offset;
+	var bottomScrollerHeight = 0;
+	if(projectConfig.bottomScrollerHeight){
+		var a = parseInt(projectConfig.bottomScrollerHeight);
+		if(a) bottomScrollerHeight = a;
+	}
 	var matrix;
 	for (i=0; i<20; i++) {
-		offset = (1536 - locals.bottomScrollerHeight.replace('px','')) * (i*-1);
+		offset = (1536 - bottomScrollerHeight) * (i*-1);
 		matrix = `matrix(1,0,0,1,0,${offset})`;
 		buffer += `
 			#${locals.slide}Slide[activeChild="${i+1}"]{

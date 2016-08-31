@@ -1,6 +1,12 @@
 
 </div>
-<%- include('../includes/bottomScroller'); %>
+<%
+	var bottomScroll = '';
+	if(projectConfig.bottomScrollerHeight){
+		if(parseInt(projectConfig.bottomScrollerHeight)) bottomScroll = include('../includes/bottomScroller');
+	}
+%>
+<%- bottomScroll %>
 </div>
 </div>
 </body>
@@ -16,6 +22,9 @@
 	`;
 %>
 <%- platformScript %>
+<script type="text/javascript">
+	app.platform.init();
+</script>
 <%
 	var script = include(`../slides/${slide}/page.js`, locals);
 	if(locals.buildType === 'native'){

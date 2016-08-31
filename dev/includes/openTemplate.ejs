@@ -1,11 +1,11 @@
 <!DOCTYPE>
 <html>
-<head>
-	<meta name="viewport" content="width=1024, initial-scale=1, user-scalable=no">
-	<meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="format-detection" content="telephone=no" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-	<%
+    <head>
+        <meta name="viewport" content="width=1024, initial-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <meta name="format-detection" content="telephone=no"/>
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+    <%
 		var style;
 		var style2 = '';
 		if(locals.buildType === 'native'){
@@ -17,18 +17,18 @@
 			style = include(`../slides/${slide}/complete.css`, locals);
 			style = style.replace(/_#/g, './').replace(/..\/..\/globalAssets/g, '.\/globalAssets').replace(/.\/.\//g, '.\/').replace(/.\/\//g, '.\/');
 		}
-	
-
 	%>
-	<%- `<style>${style}</style>` %>
+        <%- `<style>${style}</style>` %>
+        <script type="text/javascript">
+            document.addEventListener("touchmove", function(e) {
+                e.preventDefault()
+            });
+        </script>
+    </head>
+    <body>
+        <div id="wrapper">
+            <div id="container">
 
-
-
-</head>
-<body>
-<div id="wrapper">
-	<div id="container">
-
-		<div class="view"></div>
-		<div class="view active">
-		<%- style2 %>
+                <div class="view"></div>
+                <div class="view active">
+                    <%- style2 %>
