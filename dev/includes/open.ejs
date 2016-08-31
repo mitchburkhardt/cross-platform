@@ -37,6 +37,7 @@
 		}
 	}
 	top += '<style>'+buffer+'</style>';
+	console.log(locals);
 	top +=`<div class="ParentSlide" id="${locals.slide}Slide" activeChild="1">
 		<script type="text/javascript">
 			var projectConfig = ${JSON.stringify(locals.projectConfig)};

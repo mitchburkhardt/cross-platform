@@ -100,7 +100,7 @@ function spinServers(){
 		});
 		slides.forEach(function(e) {
 			createRoute({
-			    url: '/'+e,
+			    url: '/'+e+'/index.html',
 			    webRoot: './dev/slides/'+e,
 			    file: './dev/slides/'+e+'/index.ejs',
 			    ejs: true,
@@ -110,7 +110,8 @@ function spinServers(){
 					home: HomeSlide,
 					buildType: 'native',
 					filename: 'dev/slides/'+e+'/index.ejs',
-					compiled: false
+					compiled: false,
+					projectConfig: projectConfig
 				}
 			});
 		});

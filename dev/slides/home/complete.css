@@ -101,13 +101,13 @@ body {
   transform: translate3d(0, 0, 0);
 }
 
-#thingy {
+#homeSlide #thingy {
   margin-left: 50px;
   background-image: url("_#img/foo.png");
   width: 500px;
   height: 500px;
 }
-#thingy.stuff {
+#homeSlide #thingy.stuff {
   background-image: url("_#../../globalAssets/img/bar.png");
   background-image: url(_#../../globalAssets/img/bar.png);
 }

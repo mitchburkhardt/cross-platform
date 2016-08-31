@@ -1,6 +1,7 @@
 </div>
 <%
 	var bottom = `
+
 		<script type="text/javascript">
 			(function(){
 				var parent = document.getElementsByClassName('childSlide')[goToChild-1];
@@ -36,7 +37,7 @@
 				};
 				app.pageScripts['${locals.slide}']();
 			`;
-			bottom = script;
+			bottom += script;
 		}
 	}
 	else {

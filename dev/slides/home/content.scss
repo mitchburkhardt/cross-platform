@@ -1,10 +1,13 @@
-#thingy{
-	margin-left: 50px;
-	background-image: url('_#img/foo.png');
-	width: 500px;
-	height: 500px;
-	&.stuff{
-		background-image: url("_#../../globalAssets/img/bar.png");
-		background-image: url(_#../../globalAssets/img/bar.png);
+#homeSlide{
+	#thingy{
+		margin-left: 50px;
+		background-image: url('_#img/foo.png');
+		width: 500px;
+		height: 500px;
+		&.stuff{
+			background-image: url("_#../../globalAssets/img/bar.png");
+			background-image: url(_#../../globalAssets/img/bar.png);
+		}
 	}
+
 }

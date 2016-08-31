@@ -1,9 +1,42 @@
 <% include ../../includes/open %>
 
-	<div id="thingy"></div>
-	<div id="thingy" class="stuff"></div>
-	foo
-	<%- JSON.stringify(locals) %>
+<style>
+	.childSlide{
+		font-size: 40px;
+	}
+</style>
+
+		<div class="childSlide">
+			First Child
+			<div id="thingy" class="stuff"></div>
+			<div id="thingy"></div>
+			<%- JSON.stringify(locals) %>
+		</div>
+		<div class="childSlide">
+			Second Child
+			<div id="thingy" class="stuff"></div>
+			<div id="thingy"></div>
+			<%- JSON.stringify(locals) %>
+		</div>
+		<div class="childSlide">
+			Third Child
+			<div id="thingy" class="stuff"></div>
+			<div id="thingy"></div>
+			<%- JSON.stringify(locals) %>
+		</div>
+		<div class="childSlide">
+			Fourth Child
+			<div id="thingy" class="stuff"></div>
+			<div id="thingy"></div>
+			<%- JSON.stringify(locals) %>
+		</div>
+		<div class="childSlide">
+			Fifth Child
+			<div id="thingy" class="stuff"></div>
+			<div id="thingy"></div>
+			<%- JSON.stringify(locals) %>
+		</div>
+		<button style="position: absolute; right: 120px; top: 120px; font-size: 100px;">refresh</button>
 
 
 <% include ../../includes/close %>

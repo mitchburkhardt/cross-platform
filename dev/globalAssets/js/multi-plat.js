@@ -86,8 +86,10 @@ var app = {
 			that.trackChild(that.var.GUIDs[config.number-1], type);
         },
 		horizontalSwipes: function(){
+			//TODO: move navigation vars into object, which can be set on slide load, and then called here.  Can not work if sets on init.
 			var that = this;
 			var currentSlide = slideConfig.name;
+			console.log(slideConfig);
 			var currentlSlideIndex;
 			for (var prop in projectConfig.slides) {
 				if(projectConfig.slides[prop].name === currentSlide){
