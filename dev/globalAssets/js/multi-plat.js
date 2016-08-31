@@ -1,4 +1,3 @@
-// TODO: framework navigation (all 3)
 var app = {
     nav: {
         var: {
@@ -7,9 +6,13 @@ var app = {
             RunFlag: 0,
             lastURL: '',
             currentURL: 'views/home/index.html',
-            childrenMoving: 0
+            childrenMoving: 0,
+			GUIDs: [slideConfig.GUID].concat(slideConfig.children)
         },
         loadParent: function(url, direction) {
+            // platform specific definitions are defined in the "platform-specifics" folder
+        },
+		trackChild: function(url, direction) {
             // platform specific definitions are defined in the "platform-specifics" folder
         },
         loadChild: function(config) {
@@ -26,6 +29,7 @@ var app = {
             var celing;
             var floor;
             var removeNew;
+			var type = 'child';
             if (requestedSlide > CurrentSlide) {
                 floor = CurrentSlide;
                 ceiling = requestedSlide;
@@ -71,6 +75,9 @@ var app = {
 				that.var.childrenMoving = 0;
 			}
             activeParent.attr('activechild', config.number);
+			// if(!config.number*1) type = 'parent';
+			if(config.number < 2) type = 'parent';
+			that.trackChild(that.var.GUIDs[config.number-1], type);
         },
         verticalSwipes: function() {
             var activeParent,
@@ -97,6 +104,7 @@ var app = {
                 }
             });
 			this.verticalSwipes();
+			console.log(this.var.GUIDs);
         }
     },
     iscroll: {
@@ -211,9 +219,9 @@ var app = {
 app.init();
 
 function lazyTests() {
-    $('#container > div.view').on('swipeUp swipeDown swipeLeft swipeRight', function(e) {
-        console.log(e.type);
-    });
+    // $('#container > div.view').on('swipeUp swipeDown swipeLeft swipeRight', function(e) {
+    //     console.log(e.type);
+    // });
     // tests for iscroll abstraction
     // setTimeout(function(){
     // 	console.log('killing');
