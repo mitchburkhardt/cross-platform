@@ -1,15 +1,35 @@
 </div>
 <%
-	var bottom;
+	var bottom = `
+		<script type="text/javascript">
+			(function(){
+				var parent = document.getElementsByClassName('childSlide')[goToChild-1];
+				var theclass = parent.className;
+				console.log(theclass);
+				parent.className = theclass+' viz';
+				var styleTag = document.createElement('style');
+				styleTag.type = 'text/css';
+				styleTag.appendChild(document.createTextNode('#container .view .childSlide:not(.viz) > * {display: none;}#container .view .childSlide:not(.viz){opacity:0;}'));
+				setTimeout(function(){
+					document.getElementById('${locals.slide}Slide').appendChild(styleTag);
+					styleTag = null;
+					parent = null;
+					theclass = null;
+				},0);
+			})();
+		</script>
+	`;
 	var script;
 	if(locals.buildType === 'native'){
 		if(locals.nativeRoot){
 			locals.slide = locals.home;
-			bottom = include('../../includes/closeTemplate', locals);
+			bottom += include('../../includes/closeTemplate', locals);
 			bottom = bottom.replace(/_#..\/..\/globalAssets/g, '.\/globalAssets').replace(/_#/g, `./${locals.slide}/`);
 		}
 		else{
-			script = include(`../${slide}/page.js`, locals);
+			script += '<script type="text/javascript">';
+			script += include(`../${slide}/page.js`, locals);
+			script += '</script>'
 			script = script.replace(/_#..\/..\/globalAssets/g, '.\/globalAssets').replace(/_#/g, `./${locals.slide}/`);
 			script = `
 				app.pageScripts['${locals.slide}'] = function(){
@@ -17,13 +37,15 @@
 				};
 				app.pageScripts['${locals.slide}']();
 			`;
-			bottom = `<script type="text/javascript">${script}</script>`;
+			bottom = script;
 		}
 	}
 	else {
-		bottom = include('../../includes/closeTemplate', locals);
+		bottom += include('../../includes/closeTemplate', locals);
 		bottom = bottom.replace(/_#/g, './').replace(/..\/..\/globalAssets/g, '.\/globalAssets').replace(/.\/.\//g, '.\/').replace(/.\/\//g, '.\/');
 	}
+
+	bottom = bottom.replace(/\s\s+/g, ' ').replace(/\t/g, '').replace(/\n/g, '').replace(/\r\n/g, 'Width_This');
 
 
 

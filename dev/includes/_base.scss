@@ -27,6 +27,7 @@ body {
 		display: none;
 		.childSlide {
 			height: 1536px - $bottomscrollerHeight;
+			overflow: hidden;
 		}
 		&.active {
 			display: block;

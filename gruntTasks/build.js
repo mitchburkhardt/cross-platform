@@ -172,7 +172,8 @@ function CompileEJS() {
                 home: config.home,
                 compiled: true,
 				slides: slides,
-				bottomScrollerHeight: projectConfig.bottomScrollerHeight
+				bottomScrollerHeight: projectConfig.bottomScrollerHeight,
+				projectConfig: projectConfig
             }
         };
         taskArr.push('ejs:' + config.id1 + '-' + config.id2);

@@ -86,6 +86,7 @@ body {
 }
 #container .view .childSlide {
   height: 1136px;
+  overflow: hidden;
 }
 #container .view.active {
   display: block;
