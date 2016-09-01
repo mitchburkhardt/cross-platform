@@ -7,18 +7,45 @@ var app = {
             lastURL: '',
             currentURL: 'views/home/index.html',
             childrenMoving: 0,
-			GUIDs: [slideConfig.GUID].concat(slideConfig.children)
+            GUIDs: [slideConfig.GUID].concat(slideConfig.children)
         },
+		utils:{
+			findPrevNext: function(){
+				var currentSlideIndex;
+				var prop;
+				for (prop in projectConfig.slides) {
+					if(projectConfig.slides[prop].name === slideConfig.name) currentSlideIndex = prop*1;
+				}
+				var obj = {
+					prev:  null,
+					next: null,
+				};
+				if(projectConfig.slides[currentSlideIndex-1]){
+					obj.prev = projectConfig.slides[currentSlideIndex-1].name;
+				}
+				if(projectConfig.slides[currentSlideIndex+1]){
+					obj.next = projectConfig.slides[currentSlideIndex+1].name;
+				}
+				return obj;
+			}
+		},
         loadParent: function(url, direction) {
             // platform specific definitions are defined in the "platform-specifics" folder
         },
-		nextParent: function(){
-
+        nextParent: function() {
+			var next = this.utils.findPrevNext().next;
+			if(next){
+				this.loadParent(next, 'right');
+			}
 		},
-		prevParent: function(){
-
+        prevParent: function() {
+				var prev = this.utils.findPrevNext().prev;
+				console.log(prev);
+				if(prev){
+					this.loadParent(prev, 'left');
+				}
 		},
-		trackChild: function(GUID, type) {
+        trackChild: function(GUID, type) {
             // platform specific definitions are defined in the "platform-specifics" folder
         },
         loadChild: function(config) {
@@ -35,7 +62,7 @@ var app = {
             var celing;
             var floor;
             var removeNew;
-			var type = 'child';
+            var type = 'child';
             if (requestedSlide > CurrentSlide) {
                 floor = CurrentSlide;
                 ceiling = requestedSlide;
@@ -76,65 +103,49 @@ var app = {
                     }
                 }, 480);
             } else {
-				$(children[CurrentSlide-1]).removeClass('viz');
-				$(children[requestedSlide-1]).addClass('viz');
-				that.var.childrenMoving = 0;
-			}
+                $(children[CurrentSlide - 1]).removeClass('viz');
+                $(children[requestedSlide - 1]).addClass('viz');
+                that.var.childrenMoving = 0;
+            }
             activeParent.attr('activechild', config.number);
-			// if(!config.number*1) type = 'parent';
-			if(config.number < 2) type = 'parent';
-			that.trackChild(that.var.GUIDs[config.number-1], type);
+            // if(!config.number*1) type = 'parent';
+            if (config.number < 2) type = 'parent';
+            that.trackChild(that.var.GUIDs[config.number - 1], type);
         },
-		horizontalSwipes: function(){
-			//TODO: move navigation vars into object, which can be set on slide load, and then called here.  Can not work if sets on init.
+        horizontalSwipes: function() {
 			var that = this;
-			var currentSlide = slideConfig.name;
-			console.log(slideConfig);
-			var currentlSlideIndex;
-			for (var prop in projectConfig.slides) {
-				if(projectConfig.slides[prop].name === currentSlide){
-					currentlSlideIndex = prop * 1;
-					break;
-				}
-			}
-			var nextSlide = null, previousSlide = null;
-			if(projectConfig.slides[currentlSlideIndex-1]){
-				previousSlide = projectConfig.slides[currentlSlideIndex-1].name;
-			}
-			if(projectConfig.slides[currentlSlideIndex+1]){
-				nextSlide = projectConfig.slides[currentlSlideIndex+1].name;
-			}
-			if(nextSlide !== null){
-				$('#container > div.view').on('swipeLeft', function(e) {
-	                that.loadParent(nextSlide, 'right');
-	            });
-			}
-			if(previousSlide !== null){
-				$('#container > div.view').on('swipeRight', function(e) {
-					console.log('right');
-	                that.loadParent(previousSlide, 'left');
-	            });
-			}
-		},
-		afterPlatformLoad: function(){
-			this.horizontalSwipes();
-		},
+            $('#container > div.view').on('swipeLeft', function(e) {
+                that.nextParent();
+            });
+            $('#container > div.view').on('swipeRight', function(e) {
+                that.prevParent();
+            });
+        },
+        afterPlatformLoad: function() {
+            this.horizontalSwipes();
+        },
         verticalSwipes: function() {
             var activeParent,
-            	CurrentSlide,
-				that = this;
+                CurrentSlide,
+                that = this;
+
             function setVars() {
                 activeParent = $('.view.active .ParentSlide');
                 CurrentSlide = activeParent.attr('activechild') * 1;
             }
             $('#container > div.view').on('swipeUp', function(e) {
                 setVars();
-				that.loadChild({number: CurrentSlide+1, animated: true});
-
+                that.loadChild({
+                    number: CurrentSlide + 1,
+                    animated: true
+                });
             });
             $('#container > div.view').on('swipeDown', function(e) {
                 setVars();
-				that.loadChild({number: CurrentSlide-1, animated: true});
+                that.loadChild({
+                    number: CurrentSlide - 1,
+                    animated: true
+                });
             });
         },
         init: function() {
@@ -143,7 +154,7 @@ var app = {
                     return $(el).css('overflow-y') === 'scroll';
                 }
             });
-			this.verticalSwipes();
+            this.verticalSwipes();
         }
     },
     iscroll: {
@@ -239,14 +250,14 @@ var app = {
         });
     },
     init: function() {
-		if(projectConfig.bottomScrollerHeight){
-			if(parseInt(projectConfig.bottomScrollerHeight)) this.bottomScroller();
-		}
-		this.nav.init();
+        if (projectConfig.bottomScrollerHeight) {
+            if (parseInt(projectConfig.bottomScrollerHeight)) this.bottomScroller();
+        }
+        this.nav.init();
     },
-	afterPlatformLoad: function(){
-		this.nav.afterPlatformLoad();
-	}
+    afterPlatformLoad: function() {
+        this.nav.afterPlatformLoad();
+    }
 };
 app.init();
 
@@ -275,6 +286,5 @@ function lazyTests() {
     // },2500);
 }
 lazyTests();
-
 //TODO: trackChild functions
 //TODO: slide lvl buttons for child slides
