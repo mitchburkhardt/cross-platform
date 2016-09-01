@@ -44,13 +44,14 @@ app.checkImages = function(element, callback) {
 };
 app.nav.loadUtils = {
 	fadeIn: function(target, oldContainer, both){
+		var duration = 300;
 		target[0].style.zIndex = 10;
 		target[0].style.opacity = 0;
 		both.addClass('gpu');
 		setTimeout(function(){
 			target[0].style.display = 'block';
-			target[0].style.transition = 'all 300ms cubic-bezier(0.5,.5,.77,1)';
-			target[0].style.webkitTransition = 'all 300ms cubic-bezier(0.5,.5,.77,1)';
+			target[0].style.transition = 'all '+duration+'ms cubic-bezier(0.5,.5,.77,1)';
+			target[0].style.webkitTransition = 'all '+duration+'ms cubic-bezier(0.5,.5,.77,1)';
 			setTimeout(function(){
 				target[0].style.opacity = 1;
 				setTimeout(function(){
@@ -63,7 +64,7 @@ app.nav.loadUtils = {
 						target[0].setAttribute("style", '');
 						target[0].setAttribute("class", 'view active');
 					},10);
-				},330);
+				},duration+30);
 			},10);
 		},5);
 	}
