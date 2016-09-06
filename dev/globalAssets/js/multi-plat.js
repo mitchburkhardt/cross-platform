@@ -29,20 +29,27 @@ var app = {
 				return obj;
 			}
 		},
-        loadParent: function(url, direction) {
+        loadParent: function(config) {
             // platform specific definitions are defined in the "platform-specifics" folder
         },
         nextParent: function() {
 			var next = this.utils.findPrevNext().next;
 			if(next){
-				this.loadParent(next, 'right');
+				this.loadParent({
+					url: next,
+					direction: 'right',
+					paralax: true
+				});
 			}
 		},
         prevParent: function() {
 				var prev = this.utils.findPrevNext().prev;
-				console.log(prev);
 				if(prev){
-					this.loadParent(prev, 'left');
+					this.loadParent({
+						url: prev,
+						direction: 'left',
+						paralax: true
+					});
 				}
 		},
         trackChild: function(GUID, type) {
@@ -110,7 +117,6 @@ var app = {
                 that.var.childrenMoving = 0;
             }
             activeParent.attr('activechild', config.number);
-            // if(!config.number*1) type = 'parent';
             if (config.number < 2) type = 'parent';
             that.trackChild(that.var.GUIDs[config.number - 1], type);
         },
@@ -157,6 +163,7 @@ var app = {
                 }
             });
             this.verticalSwipes();
+			console.log(projectConfig);
         }
     },
     iscroll: {

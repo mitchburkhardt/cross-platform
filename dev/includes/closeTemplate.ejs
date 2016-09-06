@@ -34,6 +34,7 @@
 				${script}
 			};
 			app.pageScripts['${locals.slide}']();
+			app.nav.loadUtils.var.lastSlide = '${locals.slide}';
 		`;
 	}
 	else{

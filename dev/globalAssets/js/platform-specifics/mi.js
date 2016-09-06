@@ -1,5 +1,5 @@
-app.nav.loadParent = function(slideName, direction) {
-	console.log('dummy function to navigate to parent slide:  -  ',slideName,direction);
+app.nav.loadParent = function(config) {
+	console.log('dummy function to navigate to parent slide:  -  ',config);
     // TODO: load parent function for MI touch
 };
 app.nav.trackChild = function(GUID, type) {

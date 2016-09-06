@@ -6,9 +6,7 @@
 			(function(){
 				var parent = document.querySelectorAll('#${locals.slide}Slide .childSlide')[goToChild-1];
 				var theclass = parent.className;
-				console.log(parent.outerHTML);
 				parent.className = theclass+' viz';
-				console.log(parent.outerHTML);
 				var styleTag = document.createElement('style');
 				styleTag.type = 'text/css';
 				styleTag.appendChild(document.createTextNode('#container .view .childSlide:not(.viz) > * {display: none;}#container .view .childSlide:not(.viz){opacity:0;}'));
@@ -30,7 +28,12 @@
 		}
 		else{
 			script += '<script type="text/javascript">';
-			script += include(`../${slide}/page.js`, locals);
+			script += `
+				app.pageScripts['${locals.slide}'] = function(){
+					${include(`../${slide}/page.js`, locals)}
+				};
+				app.pageScripts['${locals.slide}']();
+			`;
 			script += '</script>'
 			script = script.replace(/_#..\/..\/globalAssets/g, '.\/globalAssets').replace(/_#/g, `./${locals.slide}/`);
 			script = `

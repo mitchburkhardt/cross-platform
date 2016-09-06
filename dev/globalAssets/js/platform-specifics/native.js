@@ -12,10 +12,8 @@ app.checkImages = function(element, callback) {
 			objs = [];
 		return a.filter(function(item) {
 			var type = typeof item;
-			if (type in prims)
-				return prims[type].hasOwnProperty(item) ? false : (prims[type][item] = true);
-			else
-				return objs.indexOf(item) >= 0 ? false : objs.push(item);
+			if (type in prims) return prims[type].hasOwnProperty(item) ? false : (prims[type][item] = true);
+			else return objs.indexOf(item) >= 0 ? false : objs.push(item);
 		});
 	}
 	setTimeout(function() {
@@ -44,9 +42,14 @@ app.checkImages = function(element, callback) {
 };
 app.nav.loadUtils = {
 	var:{
-		inTransition: 0
+		inTransition: 0,
+		lastSlide: null
 	},
-	fadeIn: function(target, oldContainer, both){
+	freeMemory: function(newURL){
+		app.pageScripts[this.var.lastSlide] = null;
+		this.var.lastSlide = newURL;
+	},
+	fadeIn: function(target, oldContainer, both, url){
 		var that = this;
 		var duration = 300;
 		target[0].style.zIndex = 10;
@@ -68,15 +71,16 @@ app.nav.loadUtils = {
 						target[0].setAttribute("style", '');
 						target[0].setAttribute("class", 'view active');
 						that.var.inTransition = 0;
+						that.freeMemory(url);
 					},10);
 				},duration+30);
 			},10);
 		},5);
 	},
-	slideIn: function(target, oldContainer, both, direction){
+	slideIn: function(target, oldContainer, both, direction, url, paralax){
 		var that = this;
 		var duration = 650;
-		var transition =  'all '+(duration)+'ms cubic-bezier(0,0,1,1';
+		var transition =  'all '+(duration)+'ms cubic-bezier(0,0,1,1)';
 		var transition2 =  'all '+(duration*1.5)+'ms cubic-bezier(0,0,1,1)';
 		target[0].style.zIndex = 10;
 		both.addClass('gpu');
@@ -94,8 +98,10 @@ app.nav.loadUtils = {
 			setTimeout(function(){
 				target[0].style.transform = 'matrix(1,0,0,1,0,0)';
 				target[0].style.webkitTransform = 'matrix(1,0,0,1,0,0)';
-				oldContainer[0].style.transform = 'matrix(1,0,0,1,'+(initLeft*-1)+',0)';
-				oldContainer[0].style.webkitTransform = 'matrix(1,0,0,1,'+(initLeft*-1)+',0)';
+				if(paralax){
+					oldContainer[0].style.transform = 'matrix(1,0,0,1,'+(initLeft*-1)+',0)';
+					oldContainer[0].style.webkitTransform = 'matrix(1,0,0,1,'+(initLeft*-1)+',0)';
+				}
 				setTimeout(function(){
 					target.addClass('active');
 					target[0].style.zIndex = 1;
@@ -106,34 +112,35 @@ app.nav.loadUtils = {
 						target[0].setAttribute("style", '');
 						target[0].setAttribute("class", 'view active');
 						that.var.inTransition = 0;
+						that.freeMemory(url);
 					},10);
 				},duration+30);
 			},10);
 		},5);
 	}
 };
-app.nav.loadParent = function(slideName, direction) {
-    // TODO: load parent function for Native
+app.nav.loadParent = function(config) {
 	var that = this;
+	if(config.url === that.loadUtils.var.lastSlide) return false;
 	if(that.loadUtils.var.inTransition) return false;
 	that.loadUtils.var.inTransition = 1;
 	var enterFrom = 'center';
-	if(direction) enterFrom = direction;
+	if(config.direction) enterFrom = config.direction;
 	var both = $('#container > .view');
 	var target = $('#container > .view:not(.active)');
 	var oldContainer = $('#container > .view.active');
 	var child = $(target.find('.childslide')[localStorage.goToChild-1]);
-	target.load(slideName+'/index.html', function(){
+	target.load(config.url+'/index.html', function(){
 		app.checkImages(child, function(){
-			switch (direction) {
+			switch (config.direction) {
 				case 'right':
-					app.nav.loadUtils.slideIn(target, oldContainer, both, 'right');
+					app.nav.loadUtils.slideIn(target, oldContainer, both, 'right', config.url, config.paralax);
 				break;
 				case 'left':
-					app.nav.loadUtils.slideIn(target, oldContainer, both, 'left');
+					app.nav.loadUtils.slideIn(target, oldContainer, both, 'left', config.url, config.paralax);
 				break;
 				case 'center':
-					app.nav.loadUtils.fadeIn(target, oldContainer, both);
+					app.nav.loadUtils.fadeIn(target, oldContainer, both, config.url);
 				break;
 				default:
 			}
@@ -154,3 +161,5 @@ app.platform = {
 		app.afterPlatformLoad();
     }
 };
+
+//TODO: deallocate memory, when killing old parent slides
