@@ -42,8 +42,8 @@ body {
 
 /*TODO: add support for platform specific style sheets*/
 #container {
-  width: 2048px;
-  height: 1536px;
+  width: 1024px;
+  height: 768px;
   overflow: hidden;
   position: relative;
   background-color: #fff;
@@ -60,7 +60,7 @@ body {
   bottom: 0;
   left: 0;
   width: 85%;
-  height: 400px;
+  height: 250px;
   background-color: blue;
   z-index: 10;
 }
@@ -85,7 +85,8 @@ body {
   display: none;
 }
 #container .view .childSlide {
-  height: 1136px;
+  background-color: #fff;
+  height: 518px;
   overflow: hidden;
 }
 #container .view.active {

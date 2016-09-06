@@ -11,8 +11,8 @@ body {
 		-ms-user-select: none;
 		user-select: none;
 	}
-	width: 2048px;
-	height: 1536px;
+	width: 1024px;
+	height: 768px;
 	overflow: hidden;
 	position: relative;
 	background-color: #fff;
@@ -26,7 +26,8 @@ body {
 		@include fillParent();
 		display: none;
 		.childSlide {
-			height: 1536px - $bottomscrollerHeight;
+			background-color: #fff;
+			height: 768px - $bottomscrollerHeight;
 			overflow: hidden;
 		}
 		&.active {

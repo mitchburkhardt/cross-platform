@@ -1,8 +1,9 @@
 #homeSlide #thingy {
   margin-left: 50px;
   background-image: url("_#img/foo.png");
-  width: 500px;
-  height: 500px;
+  width: 200px;
+  height: 200px;
+  background-size: 100%;
 }
 #homeSlide #thingy.stuff {
   background-image: url("_#../../globalAssets/img/bar.png");

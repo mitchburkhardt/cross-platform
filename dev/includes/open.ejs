@@ -20,7 +20,7 @@
 	}
 	var matrix;
 	for (i=0; i<20; i++) {
-		offset = (1536 - bottomScrollerHeight) * (i*-1);
+		offset = (768 - bottomScrollerHeight) * (i*-1);
 		matrix = `matrix(1,0,0,1,0,${offset})`;
 		buffer += `
 			#${locals.slide}Slide[activeChild="${i+1}"]{
