@@ -2,13 +2,13 @@
 	var top;
 	if(locals.nativeRoot){
 		locals.slide = locals.home;
-		top = include('../../includes/openTemplate', locals);
+		top = include('../../../includes/openTemplate', locals);
 	}
 	else if(locals.fullPage){
-		top = include('../../includes/openTemplate', locals);
+		top = include('../../../includes/openTemplate', locals);
 	}
 	else{
-		top = `<style>${include('./content.css', locals)}</style>`;
+		top = `<style>${include('../page.css', locals)}</style>`;
 		top = top.replace(/_#..\/..\/globalAssets/g, '.\/globalAssets').replace(/_#/g, `./${locals.slide}/`).replace('sourceMappingURL=', `sourceMappingURL=${locals.slide}/`);
 	}
 	var buffer = '';

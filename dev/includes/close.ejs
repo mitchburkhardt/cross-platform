@@ -23,14 +23,14 @@
 	if(locals.buildType === 'native'){
 		if(locals.nativeRoot){
 			locals.slide = locals.home;
-			bottom += include('../../includes/closeTemplate', locals);
+			bottom += include('../../../includes/closeTemplate', locals);
 			bottom = bottom.replace(/_#..\/..\/globalAssets/g, '.\/globalAssets').replace(/_#/g, `./${locals.slide}/`);
 		}
 		else{
 			script += '<script type="text/javascript">';
 			script += `
 				app.pageScripts['${locals.slide}'] = function(){
-					${include(`../${slide}/page.js`, locals)}
+					${include(`../../${slide}/page.js`, locals)}
 				};
 				app.pageScripts['${locals.slide}']();
 			`;
@@ -46,7 +46,7 @@
 		}
 	}
 	else {
-		bottom += include('../../includes/closeTemplate', locals);
+		bottom += include('../../../includes/closeTemplate', locals);
 		bottom = bottom.replace(/_#/g, './').replace(/..\/..\/globalAssets/g, '.\/globalAssets').replace(/.\/.\//g, '.\/').replace(/.\/\//g, '.\/');
 	}
 

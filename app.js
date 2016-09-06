@@ -102,7 +102,7 @@ function spinServers(){
 			createRoute({
 			    url: '/'+e+'/index.html',
 			    webRoot: './dev/slides/'+e,
-			    file: './dev/slides/'+e+'/index.ejs',
+			    file: './dev/slides/'+e+'/_internal/index.ejs',
 			    ejs: true,
 				locals:{
 					slide: e,
