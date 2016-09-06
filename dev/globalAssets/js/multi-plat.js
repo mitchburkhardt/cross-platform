@@ -103,6 +103,8 @@ var app = {
                     }
                 }, 480);
             } else {
+				activeParent[0].style.WebkitTransition = 'none';
+                activeParent[0].style.transition = 'none';
                 $(children[CurrentSlide - 1]).removeClass('viz');
                 $(children[requestedSlide - 1]).addClass('viz');
                 that.var.childrenMoving = 0;
