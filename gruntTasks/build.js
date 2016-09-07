@@ -338,6 +338,9 @@ PrettifyHTML();
 			arr.push(compiledFolder + '/' + timeStamp + '/mi/'+slides[i]+'/page.html');
 			arr.push(compiledFolder + '/' + timeStamp + '/veeva/' + slides[i] + '/_internal');
 			arr.push(compiledFolder + '/' + timeStamp + '/mi/' + slides[i] + '/_internal');
+			arr.push(compiledFolder + '/' + timeStamp + '/veeva/'+slides[i]+'/page.js');
+			arr.push(compiledFolder + '/' + timeStamp + '/mi/'+slides[i]+'/page.js');
+			arr.push(compiledFolder + '/' + timeStamp + '/native/'+slides[i]+'/page.js');
 		}
 		taskDefs.clean.css = arr;
 		taskArr.push('clean:css');
