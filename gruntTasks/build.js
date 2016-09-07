@@ -327,23 +327,19 @@ PrettifyHTML();
 		            dest: path + 'index.html',
 		            delete: path + 'page.html'
 		        };
-				console.log(obj);
 		        move_rename(obj);
 		    }
 		}
 		for (i=0; i<slides.length; i++) {
-			arr.push(compiledFolder + '/' + timeStamp + '/veeva/' + slides[i] + '/**/*.css');
-			arr.push(compiledFolder + '/' + timeStamp + '/mi/' + slides[i] + '/**/*.css');
-			arr.push(compiledFolder + '/' + timeStamp + '/veeva/'+slides[i]+'/page.html');
-			arr.push(compiledFolder + '/' + timeStamp + '/mi/'+slides[i]+'/page.html');
-			arr.push(compiledFolder + '/' + timeStamp + '/veeva/' + slides[i] + '/_internal');
-			arr.push(compiledFolder + '/' + timeStamp + '/mi/' + slides[i] + '/_internal');
-			arr.push(compiledFolder + '/' + timeStamp + '/veeva/'+slides[i]+'/page.js');
-			arr.push(compiledFolder + '/' + timeStamp + '/mi/'+slides[i]+'/page.js');
-			arr.push(compiledFolder + '/' + timeStamp + '/native/'+slides[i]+'/page.js');
+			for (j=0; j<willBuild.length; j++) {
+				arr.push(compiledFolder + '/' + timeStamp + '/'+willBuild[j]+'/' + slides[i] + '/**/*.css');
+				arr.push(compiledFolder + '/' + timeStamp + '/'+willBuild[j]+'/' + slides[i] + '/page.html');
+				arr.push(compiledFolder + '/' + timeStamp + '/'+willBuild[j]+'/' + slides[i] + '/_internal');
+				arr.push(compiledFolder + '/' + timeStamp + '/'+willBuild[j]+'/' + slides[i] + '/page.js');
+			}
 		}
-		taskDefs.clean.css = arr;
-		taskArr.push('clean:css');
+		taskDefs.clean.internals = arr;
+		taskArr.push('clean:internals');
 	}
 	renameForPlatforms();
 
@@ -351,9 +347,7 @@ function buildParametersXml() {
     function buildTask(slideIndex, endOfFile) {
         var slideName = projectConfig.slides[slideIndex].name;
         var guid = projectConfig.slides[slideIndex].GUID;
-		console.log(guid);
         taskDefs['file-creator']['parameters-' + slideName] = {};
-		// console.log(compiledFolder + '/' + timeStamp + '/mi/' + slideName + '/Parameters/Parameters.xml');
         taskDefs['file-creator']['parameters-' + slideName][compiledFolder + '/' + timeStamp + '/mi/' + projectConfig.slides[prop].name + '/Parameters/Parameters.xml'] = function(fs, fd, done) {
             fs.writeSync(fd, `<Sequence Id="${guid}" xmlns="urn:param-schema">\r\n${endOfFile}`);
             done();
@@ -469,6 +463,7 @@ function zipSlides() {
         for (j = 0; j < willBuild.length; j++) {
             if (willBuild[j] !== 'native') {
                 zipFolder(compiledFolder + '/' + timeStamp + '/' + willBuild[j] + '/' + slides[i], compiledFolder + '/' + timeStamp + '/' + willBuild[j] + '/__zipped/' + slides[i] + '.zip');
+                console.log(compiledFolder + '/' + timeStamp + '/' + willBuild[j] + '/' + slides[i], compiledFolder + '/' + timeStamp + '/' + willBuild[j] + '/__zipped/' + slides[i] + '.zip');
             }
         }
     }
