@@ -316,16 +316,18 @@ PrettifyHTML();
 		        move_rename(obj);
 		    }
 		}
+		// if (willBuild.indexOf('native') > 1000000000) {
 		if (willBuild.indexOf('native') > -1) {
 			for (i = 0; i < slides.length; i++) {
 		        path = compiledFolder + '/' + timeStamp + '/native/' + slides[i] + '/';
 		        slideName = path.split('/');
 		        slideName = slideName[slideName.length - 2];
 				obj = {
-		            src: path + 'page.html',
+		            src: path + '_internal/index.html',
 		            dest: path + 'index.html',
 		            delete: path + 'page.html'
 		        };
+				console.log(obj);
 		        move_rename(obj);
 		    }
 		}
