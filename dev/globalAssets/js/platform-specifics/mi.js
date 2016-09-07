@@ -7,5 +7,11 @@ app.nav.trackChild = function(GUID, type) {
     return false;
 };
 app.platform = {
-    init: function() {}
+    init: function() {
+        var type = 'parent';
+        var current = $('.view.active .ParentSlide').attr('activechild') * 1;
+        if (current > 1) type = 'child';
+        app.nav.trackChild(app.nav.var.GUIDs[current - 1], type);
+		app.afterPlatformLoad();
+    }
 };

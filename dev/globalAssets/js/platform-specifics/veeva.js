@@ -12,5 +12,6 @@ app.platform = {
         var current = $('.view.active .ParentSlide').attr('activechild') * 1;
         if (current > 1) type = 'child';
         app.nav.trackChild(app.nav.var.GUIDs[current - 1], type);
+		app.afterPlatformLoad();
     }
 };

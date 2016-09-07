@@ -267,29 +267,85 @@ function PrettifyHTML() {
 }
 PrettifyHTML();
 
-function renameVeevaFiles() {
-    var arr = [];
-    var path;
-    var slideName;
-    for (i = 0; i < slides.length; i++) {
-        path = compiledFolder + '/' + timeStamp + '/veeva/' + slides[i] + '/';
-        slideName = path.split('/');
-        slideName = slideName[slideName.length - 2];
-        move_rename({
-            src: path + 'index.html',
-            dest: path + slides[i] + '.html',
-            delete: path + 'index.html'
-        });
-    }
-}
-if (willBuild.indexOf('veeva') > -1) {
-    renameVeevaFiles();
-}
+// function renameVeevaFiles() {
+//     var arr = [];
+//     var path;
+//     var slideName;
+//     for (i = 0; i < slides.length; i++) {
+//         path = compiledFolder + '/' + timeStamp + '/veeva/' + slides[i] + '/';
+//         slideName = path.split('/');
+//         slideName = slideName[slideName.length - 2];
+//         move_rename({
+//             src: path + 'index.html',
+//             dest: path + slides[i] + '.html',
+//             delete: path + 'index.html'
+//         });
+//     }
+// }
+// if (willBuild.indexOf('veeva') > -1) {
+//     renameVeevaFiles();
+// }
+	function renameForPlatforms(){
+		var arr = [];
+		var path;
+		var slideName;
+		if (willBuild.indexOf('veeva') > -1) {
+		    for (i = 0; i < slides.length; i++) {
+		        path = compiledFolder + '/' + timeStamp + '/veeva/' + slides[i] + '/';
+		        slideName = path.split('/');
+		        slideName = slideName[slideName.length - 2];
+		        move_rename({
+		            src: path + '_internal/index.html',
+		            dest: path + slides[i] + '.html',
+		            delete: path + 'index.html'
+		        });
+		    }
+
+		}
+		var obj;
+		if (willBuild.indexOf('mi') > -1) {
+		    for (i = 0; i < slides.length; i++) {
+		        path = compiledFolder + '/' + timeStamp + '/mi/' + slides[i] + '/';
+		        slideName = path.split('/');
+		        slideName = slideName[slideName.length - 2];
+				obj = {
+		            src: path + '_internal/index.html',
+		            dest: path + 'index.html',
+		            delete: path + 'page.html'
+		        };
+		        move_rename(obj);
+		    }
+		}
+		if (willBuild.indexOf('native') > -1) {
+			for (i = 0; i < slides.length; i++) {
+		        path = compiledFolder + '/' + timeStamp + '/native/' + slides[i] + '/';
+		        slideName = path.split('/');
+		        slideName = slideName[slideName.length - 2];
+				obj = {
+		            src: path + 'page.html',
+		            dest: path + 'index.html',
+		            delete: path + 'page.html'
+		        };
+		        move_rename(obj);
+		    }
+		}
+		for (i=0; i<slides.length; i++) {
+			arr.push(compiledFolder + '/' + timeStamp + '/veeva/' + slides[i] + '/**/*.css');
+			arr.push(compiledFolder + '/' + timeStamp + '/mi/' + slides[i] + '/**/*.css');
+			arr.push(compiledFolder + '/' + timeStamp + '/veeva/'+slides[i]+'/page.html');
+			arr.push(compiledFolder + '/' + timeStamp + '/mi/'+slides[i]+'/page.html');
+			arr.push(compiledFolder + '/' + timeStamp + '/veeva/' + slides[i] + '/_internal');
+			arr.push(compiledFolder + '/' + timeStamp + '/mi/' + slides[i] + '/_internal');
+		}
+		taskDefs.clean.css = arr;
+		taskArr.push('clean:css');
+	}
+	renameForPlatforms();
 
 function buildParametersXml() {
     function buildTask(slideIndex, endOfFile) {
         var slideName = projectConfig.slides[slideIndex].name;
-        var guid = projectConfig.slides[slideIndex]['GUID'];
+        var guid = projectConfig.slides[slideIndex].GUID;
 		console.log(guid);
         taskDefs['file-creator']['parameters-' + slideName] = {};
 		// console.log(compiledFolder + '/' + timeStamp + '/mi/' + slideName + '/Parameters/Parameters.xml');
