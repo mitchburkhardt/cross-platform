@@ -1,2 +1,13 @@
-#slide1Slide #thingy{margin-left:50px;background-image:url("_#img/foo.png");width:200px;height:200px;background-size:100%}#slide1Slide #thingy.stuff{background-image:url("_#../../globalAssets/img/bar.png");background-image:url(_#../../globalAssets/img/bar.png)}
+#slide1Slide #thingy {
+  margin-left: 50px;
+  background-image: url("_#img/foo.png");
+  width: 200px;
+  height: 200px;
+  background-size: 100%;
+}
+#slide1Slide #thingy.stuff {
+  background-image: url("_#../../globalAssets/img/bar.png");
+  background-image: url(_#../../globalAssets/img/bar.png);
+}
+
 /*# sourceMappingURL=page.css.map */

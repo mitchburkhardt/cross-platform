@@ -1,2 +1,117 @@
-html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}table{border-collapse:collapse;border-spacing:0}body{background-color:#000}#container{width:1024px;height:768px;overflow:hidden;position:relative;background-color:#fff}#container *{-webkit-touch-callout:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}#container #bottomScroller{position:absolute;bottom:0;left:0;width:85%;height:250px;background-color:blue;z-index:10}#container #bottomScroller .inner{position:absolute;top:25px;left:25px;height:calc(100% - 50px);width:calc(100% - 50px);box-sizing:border-box;padding-right:15px}#container .scrollContainer .inner{overflow:hidden}#container .view{position:absolute;top:0;left:0;height:100%;width:100%;display:none}#container .view .childSlide{background-color:#fff;height:518px;overflow:hidden}#container .view.active{display:block}.gpu{-webkit-backface-visibility:hidden;backface-visibility:hidden;-webkit-perspective:1000;perspective:1000;-webkit-transform:translate3d(0, 0, 0);transform:translate3d(0, 0, 0)}#homeSlide #thingy{margin-left:50px;background-image:url("_#img/foo.png");width:200px;height:200px;background-size:100%}#homeSlide #thingy.stuff{background-image:url("_#../../globalAssets/img/bar.png");background-image:url(_#../../globalAssets/img/bar.png)}
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+body {
+  line-height: 1;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+body {
+  background-color: #000;
+}
+
+/*TODO: add support for platform specific style sheets*/
+#container {
+  width: 1024px;
+  height: 768px;
+  overflow: hidden;
+  position: relative;
+  background-color: #fff;
+}
+#container * {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+#container #bottomScroller {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 85%;
+  height: 250px;
+  background-color: blue;
+  z-index: 10;
+}
+#container #bottomScroller .inner {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  height: calc(100% - 50px);
+  width: calc(100% - 50px);
+  box-sizing: border-box;
+  padding-right: 15px;
+}
+#container .scrollContainer .inner {
+  overflow: hidden;
+}
+#container .view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: none;
+}
+#container .view .childSlide {
+  background-color: #fff;
+  height: 518px;
+  overflow: hidden;
+}
+#container .view.active {
+  display: block;
+}
+
+.gpu {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  perspective: 1000;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+
+#homeSlide #thingy {
+  margin-left: 50px;
+  background-image: url("_#img/foo.png");
+  width: 200px;
+  height: 200px;
+  background-size: 100%;
+}
+#homeSlide #thingy.stuff {
+  background-image: url("_#../../globalAssets/img/bar.png");
+  background-image: url(_#../../globalAssets/img/bar.png);
+}
+
 /*# sourceMappingURL=complete.css.map */
